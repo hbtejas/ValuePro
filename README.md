@@ -6,32 +6,19 @@ A production-ready MERN stack web application built specifically for Indian reta
 
 ## 🚀 Deployment to Vercel
 
-Vercel supports this monorepo out of the box using **Vercel Monorepos** support. You should deploy the **Frontend** and **Backend** as two separate Vercel projects for optimal scaling.
+The application is configured for a **unified single-project Vercel deployment**. You can deploy the entire monorepo (both React frontend and Express backend) as a single project with one click!
 
-### 1. Deploy the Backend API (`server/`)
+### Step-by-Step Deployment:
 1. In the Vercel Dashboard, click **New Project** and import your repository.
 2. Under **Project Settings**:
-   - **Framework Preset**: None / Other
-   - **Root Directory**: `server`
+   - **Framework Preset**: **Other** (Do NOT choose Vite; Vercel will use the root `vercel.json` configuration automatically).
+   - **Root Directory**: Leave empty (keep as root folder `/`).
 3. Under **Environment Variables**, add:
-   - `NODE_ENV`: `production`
-   - `PORT`: `5000`
-   - `MONGO_URI`: *Your MongoDB Atlas Connection String* (if omitted, the app will automatically and safely fall back to the in-memory array database).
-   - `JWT_SECRET`: *A secure random string*
-   - `JWT_REFRESH_SECRET`: *A secure random string*
-4. Click **Deploy**. Vercel will build it as serverless functions using the configuration in [vercel.json](file:///d:/Indiancal/valuepro/server/vercel.json).
-5. Copy your deployed API URL (e.g., `https://valuepro-api.vercel.app`).
+   - `JWT_SECRET`: *A secure random string* (required for user authentication)
+   - `JWT_REFRESH_SECRET`: *Another secure random string*
+   - `MONGO_URI`: *Your MongoDB Atlas connection string* (optional — if not provided, the server automatically falls back to the in-memory array database).
+4. Click **Deploy**. Vercel will compile the Vite frontend, mount the Express backend serverless functions, and configure all routing out of the box!
 
-### 2. Deploy the Frontend Client (`client/`)
-1. In the Vercel Dashboard, click **New Project** and import the same repository.
-2. Under **Project Settings**:
-   - **Framework Preset**: **Vite**
-   - **Root Directory**: `client`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-3. Under **Environment Variables**, add:
-   - `VITE_API_URL`: `https://your-api-domain.vercel.app/api` (paste the backend API URL you copied, appending `/api`).
-4. Click **Deploy**. Vercel will serve it as a fast, statically optimized SPA with path rewriting configured in [vercel.json](file:///d:/Indiancal/valuepro/client/vercel.json).
 
 ---
 
