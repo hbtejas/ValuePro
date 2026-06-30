@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: valuepro-mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: valuepro
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: valuepro-api
+    ports:
+      - '5000:5000'
+    depends_on:
+      - mongo
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/valuepro
+      - JWT_SECRET=changeme_in_production
+      - JWT_REFRESH_SECRET=changeme_refresh_in_production
+      - PORT=5000
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: valuepro-client
+    ports:
+      - '5173:5173'
+    depends_on:
+      - server
+    environment:
+      - VITE_API_URL=http://localhost:5000/api
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+
+volumes:
+  mongo-data:
