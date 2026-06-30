@@ -111,4 +111,13 @@
   .text-financial-negative {
     @apply text-loss dark:text-loss-light;
   }
+
+  /* Hide scrollbar for tab rows */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

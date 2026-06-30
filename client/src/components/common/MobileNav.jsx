@@ -11,9 +11,9 @@ const tabs = [
 
 export default function MobileNav() {
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-surface-dark-primary/90 
-                     backdrop-blur-xl border-t border-surface-border dark:border-surface-dark-border
-                     safe-area-inset-bottom">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 dark:bg-surface-dark-primary/95 
+                     backdrop-blur-xl border-t border-surface-border dark:border-surface-dark-border"
+         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       <div className="flex items-center justify-around h-16 px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -29,8 +29,12 @@ export default function MobileNav() {
                    : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}`
               }
             >
-              <Icon size={20} strokeWidth={isActive => isActive ? 2.5 : 1.5} />
-              <span className="text-[10px] font-medium">{tab.label}</span>
+              {({ isActive }) => (
+                <>
+                  <Icon size={20} strokeWidth={isActive ? 2.5 : 1.5} />
+                  <span className={`text-[10px] ${isActive ? 'font-bold' : 'font-medium'}`}>{tab.label}</span>
+                </>
+              )}
             </NavLink>
           );
         })}

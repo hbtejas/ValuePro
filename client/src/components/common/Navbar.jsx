@@ -55,7 +55,7 @@ export default function Navbar({ onMenuToggle }) {
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-white/80 dark:bg-surface-dark-primary/80 backdrop-blur-xl border-b border-surface-border dark:border-surface-dark-border">
+    <header className="sticky top-0 z-20 bg-white/80 dark:bg-surface-dark-primary/80 backdrop-blur-xl border-b border-surface-border dark:border-surface-dark-border">
       <div className="flex items-center justify-between px-4 lg:px-6 h-16">
         {/* Left: Menu toggle + Search */}
         <div className="flex items-center gap-3 flex-1">
@@ -89,7 +89,7 @@ export default function Navbar({ onMenuToggle }) {
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -5 }}
-                  className="absolute top-full mt-2 w-full glass-card p-2 max-h-64 overflow-y-auto"
+                  className="absolute top-full mt-2 w-full glass-card p-2 max-h-64 overflow-y-auto z-50"
                 >
                   {searchResults.map((stock) => (
                     <button

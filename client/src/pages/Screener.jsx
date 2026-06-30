@@ -328,7 +328,15 @@ export default function StockScreener() {
             </thead>
             <tbody className="divide-y divide-surface-border dark:divide-surface-dark-border">
               {loading && stocks.length === 0 ? (
-                [...Array(4)].map((_, i) => <tr key={i}><td colSpan="5" className="h-16 skeleton" /></tr>)
+                [...Array(4)].map((_, i) => (
+                  <tr key={i}>
+                    <td className="px-5 py-5"><div className="skeleton h-4 w-32 rounded" /></td>
+                    <td className="px-5 py-5"><div className="skeleton h-4 w-16 rounded" /></td>
+                    <td className="px-5 py-5"><div className="skeleton h-4 w-12 rounded" /></td>
+                    <td className="px-5 py-5"><div className="skeleton h-4 w-14 rounded" /></td>
+                    <td className="px-5 py-5"><div className="skeleton h-4 w-20 rounded" /></td>
+                  </tr>
+                ))
               ) : sortedStocks.length > 0 ? (
                 sortedStocks.map((stock) => {
                   const deVal = stock.debtToEquity > 10 ? stock.debtToEquity / 100 : stock.debtToEquity;
@@ -365,11 +373,11 @@ export default function StockScreener() {
       <AnimatePresence>
         {selectedStock && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedStock(null)} className="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm" />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedStock(null)} className="fixed inset-0 bg-black/60 z-[60] backdrop-blur-sm" />
             <motion.div
               initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed right-0 top-0 h-full w-full max-w-2xl bg-white dark:bg-surface-dark-secondary z-50 shadow-2xl flex flex-col"
+              className="fixed right-0 top-0 h-full w-full max-w-2xl bg-white dark:bg-surface-dark-secondary z-[70] shadow-2xl flex flex-col"
             >
               {/* Header */}
               <div className="flex justify-between items-start px-6 py-5 border-b border-surface-border dark:border-surface-dark-border bg-surface-tertiary dark:bg-surface-dark-tertiary">
@@ -384,7 +392,7 @@ export default function StockScreener() {
               </div>
 
               {/* Tabs */}
-              <div className="flex border-b border-surface-border dark:border-surface-dark-border px-4 overflow-x-auto bg-surface-tertiary/30">
+              <div className="flex border-b border-surface-border dark:border-surface-dark-border px-4 overflow-x-auto bg-surface-tertiary/30 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
                 {[
                   { id: 'financials', label: '📊 Financials' },
                   { id: 'insights', label: '💡 Insights & Peers' },
@@ -458,7 +466,7 @@ export default function StockScreener() {
                     </div>
 
                     {/* Sub-Tabs: Balance Sheet, P&L, Cash Flows, Quarterly */}
-                    <div className="flex gap-1 p-1 bg-surface-tertiary dark:bg-surface-dark-tertiary rounded-xl text-xs font-semibold">
+                    <div className="flex gap-1 p-1 bg-surface-tertiary dark:bg-surface-dark-tertiary rounded-xl text-xs font-semibold overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
                       {[
                         { id: 'balanceSheet', label: 'Balance Sheet' },
                         { id: 'profitAndLoss', label: 'Profit & Loss' },
