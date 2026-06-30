@@ -1,8 +1,65 @@
 const { calculateStockRisk } = require('../services/riskEngine');
 const Stock = require('../models/Stock');
+const https = require('https');
 
 // User Agent matching a real browser to prevent blocks
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+
+/**
+ * Robust fetch polyfill supporting Node.js older environments (using native https)
+ */
+async function fetchUrl(url, options = {}) {
+  // If global fetch is present and not throwing, use it
+  if (typeof fetch === 'function') {
+    try {
+      const res = await fetch(url, options);
+      const textVal = await res.text();
+      return {
+        ok: res.ok,
+        status: res.status,
+        text: async () => textVal,
+        json: async () => JSON.parse(textVal),
+        headers: {
+          get: (name) => res.headers.get(name)
+        }
+      };
+    } catch (e) {
+      // Fallback to https on error
+    }
+  }
+
+  return new Promise((resolve, reject) => {
+    const urlObj = new URL(url);
+    const headers = options.headers || {};
+    
+    const reqOptions = {
+      method: options.method || 'GET',
+      hostname: urlObj.hostname,
+      path: urlObj.pathname + urlObj.search,
+      headers: headers
+    };
+
+    const req = https.request(reqOptions, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        resolve({
+          ok: res.statusCode >= 200 && res.statusCode < 300,
+          status: res.statusCode,
+          text: async () => data,
+          json: async () => JSON.parse(data),
+          headers: {
+            get: (name) => res.headers[name.toLowerCase()]
+          }
+        });
+      });
+    });
+
+    req.on('error', (err) => { reject(err); });
+    if (options.body) { req.write(options.body); }
+    req.end();
+  });
+}
 
 let sessionCookie = null;
 let sessionCrumb = null;
@@ -18,7 +75,7 @@ async function refreshYahooSession() {
   }
 
   console.log('Refreshing Yahoo Finance cookie and crumb session...');
-  const cookieResponse = await fetch('https://fc.yahoo.com', {
+  const cookieResponse = await fetchUrl('https://fc.yahoo.com', {
     headers: { 'User-Agent': USER_AGENT }
   });
   
@@ -28,7 +85,7 @@ async function refreshYahooSession() {
   }
   const cookie = rawCookies.split(';')[0];
 
-  const crumbResponse = await fetch('https://query2.finance.yahoo.com/v1/test/getcrumb', {
+  const crumbResponse = await fetchUrl('https://query2.finance.yahoo.com/v1/test/getcrumb', {
     headers: {
       'Cookie': cookie,
       'User-Agent': USER_AGENT
@@ -240,7 +297,7 @@ exports.screenStock = async (req, res, next) => {
 
       // 2. Fetch summary & holders
       const quoteUrl = `https://query2.finance.yahoo.com/v10/finance/quoteSummary/${cleaned}?modules=summaryDetail,financialData,defaultKeyStatistics,majorHoldersBreakdown&crumb=${crumb}`;
-      const quoteResponse = await fetch(quoteUrl, {
+      const quoteResponse = await fetchUrl(quoteUrl, {
         headers: {
           'Cookie': cookie,
           'User-Agent': USER_AGENT
@@ -292,7 +349,7 @@ exports.screenStock = async (req, res, next) => {
     // 3. Fetch News
     try {
       const searchUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${cleaned}&newsCount=6`;
-      const searchRes = await fetch(searchUrl, {
+      const searchRes = await fetchUrl(searchUrl, {
         headers: { 'User-Agent': USER_AGENT }
       });
       if (searchRes.ok) {
@@ -461,7 +518,7 @@ exports.getChartData = async (req, res, next) => {
     const interval = ['1mo', '6mo', '1y'].includes(safeRange) ? '1d' : '1wk';
 
     const chartUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${cleaned}?range=${safeRange}&interval=${interval}`;
-    const chartRes = await fetch(chartUrl, {
+    const chartRes = await fetchUrl(chartUrl, {
       headers: { 'User-Agent': USER_AGENT }
     });
 
@@ -568,7 +625,7 @@ exports.autocomplete = async (req, res, next) => {
     let yahooResults = [];
     try {
       const searchUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(q)}&quotesCount=8&newsCount=0`;
-      const searchRes = await fetch(searchUrl, {
+      const searchRes = await fetchUrl(searchUrl, {
         headers: { 'User-Agent': USER_AGENT }
       });
       if (searchRes.ok) {
