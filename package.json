@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "ValuePro India — Stock Valuation & Investment Toolkit",
   "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
+    "build": "npm run build --prefix client",
     "install:all": "npm install --prefix server && npm install --prefix client",
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
@@ -12,3 +17,4 @@
     "test:client": "npm test --prefix client"
   }
 }
+
