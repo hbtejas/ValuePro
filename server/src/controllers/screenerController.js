@@ -361,14 +361,6 @@ exports.screenStock = async (req, res, next) => {
       { type: 'Announcement', name: `Board Meeting Outcome & Dividends Announcement — ${pureTicker}`, link: '#' }
     ];
 
-    // 9. Peers
-    const peers = [
-      { ticker: pureTicker, name: financialData.companyName || pureTicker, price: financialData.currentPrice, pe: financialData.peRatio || 25, de: financialData.debtToEquity || 0.5 },
-      { ticker: 'PEER_A', name: 'Sector Leader Ltd', price: financialData.currentPrice * 1.5, pe: 28.5, de: 0.25 },
-      { ticker: 'PEER_B', name: 'National Competitor Ltd', price: financialData.currentPrice * 0.7, pe: 18.2, de: 0.8 },
-      { ticker: 'PEER_C', name: 'Regional challenger Ltd', price: financialData.currentPrice * 0.4, pe: 14.0, de: 1.1 }
-    ];
-
     let companyName = financialData.companyName || pureTicker;
     let sector = financialData.sector || 'N/A';
     const match = await Stock.findOne({ ticker: pureTicker });
@@ -376,6 +368,51 @@ exports.screenStock = async (req, res, next) => {
       companyName = match.name;
       sector = match.sector;
     }
+
+    // 9. Fetch Real Peers in the same sector from database
+    let peers = [];
+    try {
+      const dbPeers = await Stock.find({ sector, ticker: { $ne: pureTicker } }).limit(3);
+      peers = dbPeers.map(p => ({
+        ticker: p.ticker,
+        name: p.name,
+        price: p.fundamentals.currentPrice,
+        pe: p.fundamentals.peRatio || 20,
+        de: p.fundamentals.debtToEquity > 10 ? p.fundamentals.debtToEquity / 100 : (p.fundamentals.debtToEquity || 0.5)
+      }));
+
+      // Pad with other major stocks if fewer than 3 peers in the same sector
+      if (peers.length < 3) {
+        const excludeTickers = [pureTicker, ...peers.map(p => p.ticker)];
+        const others = await Stock.find({ ticker: { $nin: excludeTickers } }).limit(3 - peers.length);
+        others.forEach(p => {
+          peers.push({
+            ticker: p.ticker,
+            name: p.name,
+            price: p.fundamentals.currentPrice,
+            pe: p.fundamentals.peRatio || 20,
+            de: p.fundamentals.debtToEquity > 10 ? p.fundamentals.debtToEquity / 100 : (p.fundamentals.debtToEquity || 0.5)
+          });
+        });
+      }
+    } catch (err) {
+      console.warn('Failed to query peers from DB. Falling back to default list.', err);
+      peers = [
+        { ticker: 'TCS', name: 'Tata Consultancy Services Ltd', price: 4275, pe: 35.8, de: 0.12 },
+        { ticker: 'INFY', name: 'Infosys Ltd', price: 1640, pe: 26.3, de: 0.10 },
+        { ticker: 'RELIANCE', name: 'Reliance Industries Ltd', price: 2953, pe: 30.2, de: 0.43 }
+      ].filter(p => p.ticker !== pureTicker).slice(0, 3);
+    }
+
+    // Add current stock as the first item in the comparison list
+    const deVal = financialData.debtToEquity > 10 ? financialData.debtToEquity / 100 : (financialData.debtToEquity || 0.5);
+    peers.unshift({
+      ticker: pureTicker,
+      name: companyName,
+      price: financialData.currentPrice,
+      pe: financialData.peRatio || 25,
+      de: deVal
+    });
 
     return res.status(200).json({
       success: true,
@@ -401,6 +438,165 @@ exports.screenStock = async (req, res, next) => {
         dataSource: isMock ? 'Local Database (Offline Fallback)' : 'Yahoo Finance API'
       }
     });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * GET /api/screener/chart?ticker=RELIANCE.NS&range=1y
+ * Returns historical OHLCV data with computed 50-DMA and 200-DMA
+ */
+exports.getChartData = async (req, res, next) => {
+  try {
+    let { ticker, range } = req.query;
+    if (!ticker) {
+      return res.status(400).json({ success: false, message: 'Ticker is required' });
+    }
+
+    const cleaned = cleanTicker(ticker);
+    const validRanges = ['1mo', '6mo', '1y', '3y', '5y', '10y', 'max'];
+    const safeRange = validRanges.includes(range) ? range : '1y';
+    const interval = ['1mo', '6mo', '1y'].includes(safeRange) ? '1d' : '1wk';
+
+    const chartUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${cleaned}?range=${safeRange}&interval=${interval}`;
+    const chartRes = await fetch(chartUrl, {
+      headers: { 'User-Agent': USER_AGENT }
+    });
+
+    if (!chartRes.ok) {
+      return res.status(502).json({ success: false, message: `Yahoo chart API returned ${chartRes.status}` });
+    }
+
+    const chartJson = await chartRes.json();
+    const result = chartJson.chart.result?.[0];
+    if (!result || !result.timestamp) {
+      return res.status(404).json({ success: false, message: 'No chart data available for this ticker' });
+    }
+
+    const timestamps = result.timestamp;
+    const quote = result.indicators.quote[0];
+    const closes = quote.close || [];
+    const volumes = quote.volume || [];
+    const highs = quote.high || [];
+    const lows = quote.low || [];
+
+    // Build data points
+    const points = [];
+    for (let i = 0; i < timestamps.length; i++) {
+      if (closes[i] == null) continue;
+      points.push({
+        date: new Date(timestamps[i] * 1000).toISOString().split('T')[0],
+        close: Math.round(closes[i] * 100) / 100,
+        high: highs[i] ? Math.round(highs[i] * 100) / 100 : null,
+        low: lows[i] ? Math.round(lows[i] * 100) / 100 : null,
+        volume: volumes[i] || 0,
+      });
+    }
+
+    // Compute moving averages
+    const computeMA = (data, period) => {
+      return data.map((pt, idx) => {
+        if (idx < period - 1) return null;
+        let sum = 0;
+        for (let j = idx - period + 1; j <= idx; j++) {
+          sum += data[j].close;
+        }
+        return Math.round((sum / period) * 100) / 100;
+      });
+    };
+
+    const ma50 = computeMA(points, 50);
+    const ma200 = computeMA(points, 200);
+
+    const chartData = points.map((pt, i) => ({
+      ...pt,
+      ma50: ma50[i],
+      ma200: ma200[i],
+    }));
+
+    return res.json({
+      success: true,
+      data: {
+        ticker: cleaned,
+        range: safeRange,
+        interval,
+        points: chartData,
+      }
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * GET /api/screener/autocomplete?q=REL
+ * Returns matching stocks from local DB + Yahoo search API
+ */
+exports.autocomplete = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+    if (!q || q.length < 1) {
+      return res.json({ success: true, data: [] });
+    }
+
+    // 1. Local DB search
+    let localResults = [];
+    try {
+      const stocks = await Stock.find({
+        $or: [
+          { ticker: { $regex: q, $options: 'i' } },
+          { name: { $regex: q, $options: 'i' } },
+        ],
+      })
+        .select('ticker name exchange sector')
+        .limit(6);
+      localResults = stocks.map(s => ({
+        ticker: s.ticker,
+        name: s.name,
+        exchange: s.exchange || 'NSE',
+        sector: s.sector || '',
+        source: 'local'
+      }));
+    } catch (dbErr) {
+      console.warn('Local DB search failed:', dbErr.message);
+    }
+
+    // 2. Yahoo search API (no auth needed)
+    let yahooResults = [];
+    try {
+      const searchUrl = `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(q)}&quotesCount=8&newsCount=0`;
+      const searchRes = await fetch(searchUrl, {
+        headers: { 'User-Agent': USER_AGENT }
+      });
+      if (searchRes.ok) {
+        const searchJson = await searchRes.json();
+        yahooResults = (searchJson.quotes || [])
+          .filter(item => item.exchDisp === 'NSE' || item.exchDisp === 'BSE' || item.exchange === 'NSI' || item.exchange === 'BSE')
+          .map(item => ({
+            ticker: item.symbol.replace('.NS', '').replace('.BO', ''),
+            name: item.longname || item.shortname || item.symbol,
+            exchange: item.exchDisp || 'NSE',
+            sector: item.sector || '',
+            source: 'yahoo'
+          }));
+      }
+    } catch (yErr) {
+      console.warn('Yahoo autocomplete failed:', yErr.message);
+    }
+
+    // 3. Merge and deduplicate (local takes priority)
+    const seen = new Set(localResults.map(r => r.ticker));
+    yahooResults.forEach(yr => {
+      if (!seen.has(yr.ticker)) {
+        localResults.push(yr);
+        seen.add(yr.ticker);
+      }
+    });
+
+    return res.json({ success: true, data: localResults.slice(0, 10) });
 
   } catch (error) {
     next(error);
