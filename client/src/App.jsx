@@ -7,6 +7,7 @@ import CalculatorPage from './pages/CalculatorPage';
 import CalculatorList from './pages/CalculatorList';
 import Login from './pages/Login';
 import History from './pages/History';
+import StockScreener from './pages/Screener';
 import './index.css';
 
 export default function App() {
@@ -18,7 +19,8 @@ export default function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/calculators" element={<CalculatorList />} />
             <Route path="/calculator/:calculatorId" element={<CalculatorPage />} />
-            <Route path="/portfolio" element={<Dashboard />} />
+            <Route path="/screener" element={<StockScreener />} />
+            <Route path="/portfolio" element={<StockScreener />} />
             <Route path="/history" element={<History />} />
             <Route path="/login" element={<Login />} />
           </Route>

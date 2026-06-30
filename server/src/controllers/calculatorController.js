@@ -33,6 +33,7 @@ const calculatorMap = {
   'beneish-m-score': engine.beneishMScore,
   'drip': engine.dripCalculator,
   'combined-fair-value': engine.combinedFairValue,
+  'income-tax': engine.incomeTaxCalculator,
 };
 
 exports.calculate = async (req, res, next) => {

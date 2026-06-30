@@ -7,7 +7,7 @@ const CALCULATOR_TYPES = [
   'total-shareholder-return', 'portfolio-allocation', 'position-size',
   'asset-allocation', 'sip', 'lump-sum', 'retirement', 'inflation', 'xirr',
   'screener-score', 'piotroski-f-score', 'altman-z-score', 'beneish-m-score',
-  'drip', 'combined-fair-value',
+  'drip', 'combined-fair-value', 'income-tax',
 ];
 
 const calculationHistorySchema = new mongoose.Schema({

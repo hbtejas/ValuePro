@@ -9,6 +9,7 @@ const calculatorRoutes = require('./routes/calculatorRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 const portfolioRoutes = require('./routes/portfolioRoutes');
 const stockRoutes = require('./routes/stockRoutes');
+const screenerRoutes = require('./routes/screenerRoutes');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/api/calculate', calculatorRoutes);
 app.use('/api/history', historyRoutes);
 app.use('/api/portfolio', portfolioRoutes);
 app.use('/api/stocks', stockRoutes);
+app.use('/api/screener', screenerRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

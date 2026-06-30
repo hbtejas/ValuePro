@@ -126,14 +126,14 @@ export default function Sidebar({ isOpen, onToggle }) {
             );
           })}
 
-          {/* Portfolio & History */}
+          {/* Screener & History */}
           <div className="pt-3 mt-3 border-t border-surface-border dark:border-surface-dark-border">
             <NavLink
-              to="/portfolio"
+              to="/screener"
               className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             >
-              <span className="text-lg">💼</span>
-              <span>Portfolio</span>
+              <span className="text-lg">🔍</span>
+              <span>Screener</span>
             </NavLink>
             <NavLink
               to="/history"

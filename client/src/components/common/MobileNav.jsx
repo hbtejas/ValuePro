@@ -1,10 +1,10 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Calculator, Briefcase, Clock, User } from 'lucide-react';
+import { LayoutDashboard, Calculator, Search, Clock, User } from 'lucide-react';
 
 const tabs = [
   { to: '/', icon: LayoutDashboard, label: 'Home' },
   { to: '/calculators', icon: Calculator, label: 'Calculate' },
-  { to: '/portfolio', icon: Briefcase, label: 'Portfolio' },
+  { to: '/screener', icon: Search, label: 'Screener' },
   { to: '/history', icon: Clock, label: 'History' },
   { to: '/login', icon: User, label: 'Profile' },
 ];

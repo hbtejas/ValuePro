@@ -1107,6 +1107,54 @@ function combinedFairValue({
 }
 
 // ============================================================================
+// 31. INCOME TAX CALCULATOR
+// ============================================================================
+
+function incomeTaxCalculator({ grossSalary = 0, sec80C = 0, sec80D = 0, otherDeductions = 0 }) {
+  const oldRegime = computeTaxOldRegime(grossSalary, 50000, sec80C, sec80D, otherDeductions);
+  const newRegime = computeTaxNewRegime(grossSalary, 75000);
+  const savings = oldRegime.totalTax - newRegime.totalTax;
+  
+  return {
+    oldRegime,
+    newRegime,
+    savings,
+    betterRegime: savings > 0 ? 'New Regime' : savings < 0 ? 'Old Regime' : 'Both same'
+  };
+}
+
+function computeTaxOldRegime(gross, standardDeduction, sec80C, sec80D, otherDeductions) {
+  const totalDeductions = standardDeduction + Math.min(150000, sec80C) + Math.min(25000, sec80D) + otherDeductions;
+  const taxableIncome = Math.max(0, gross - totalDeductions);
+  let tax = 0;
+  if (taxableIncome <= 250000) tax = 0;
+  else if (taxableIncome <= 500000) tax = (taxableIncome - 250000) * 0.05;
+  else if (taxableIncome <= 1000000) tax = 12500 + (taxableIncome - 500000) * 0.20;
+  else tax = 112500 + (taxableIncome - 1000000) * 0.30;
+
+  if (taxableIncome <= 500000) tax = 0; // Rebate 87A
+
+  const totalTax = tax * 1.04; // Cess 4%
+  return { taxableIncome, totalTax: Math.round(totalTax), deductions: totalDeductions };
+}
+
+function computeTaxNewRegime(gross, standardDeduction) {
+  const taxableIncome = Math.max(0, gross - standardDeduction);
+  let tax = 0;
+  if (taxableIncome <= 300000) tax = 0;
+  else if (taxableIncome <= 700000) tax = (taxableIncome - 300000) * 0.05;
+  else if (taxableIncome <= 1000000) tax = 20000 + (taxableIncome - 700000) * 0.10;
+  else if (taxableIncome <= 1200000) tax = 50000 + (taxableIncome - 1000000) * 0.15;
+  else if (taxableIncome <= 1500000) tax = 80000 + (taxableIncome - 1200000) * 0.20;
+  else tax = 140000 + (taxableIncome - 1500000) * 0.30;
+
+  if (taxableIncome <= 700000) tax = 0; // Rebate 87A
+
+  const totalTax = tax * 1.04;
+  return { taxableIncome, totalTax: Math.round(totalTax), deductions: standardDeduction };
+}
+
+// ============================================================================
 // EXPORT ALL FUNCTIONS
 // ============================================================================
 
@@ -1144,4 +1192,5 @@ module.exports = {
   beneishMScore,
   dripCalculator,
   combinedFairValue,
+  incomeTaxCalculator,
 };

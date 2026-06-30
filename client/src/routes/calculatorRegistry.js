@@ -21,6 +21,8 @@ import {
 
 import { ScreenerScoreCalculator, BeneishMScoreCalculator } from '../components/calculators/AdvancedCalculators';
 
+import IncomeTaxCalculator from '../components/calculators/IncomeTaxCalculator';
+
 // Map calculator IDs to their components
 const CALCULATOR_COMPONENTS = {
   'intrinsic-value': IntrinsicValueCalculator,
@@ -53,7 +55,9 @@ const CALCULATOR_COMPONENTS = {
   'beneish-m-score': BeneishMScoreCalculator,
   'drip': DRIPCalculator,
   'combined-fair-value': CombinedFairValueCalculator,
+  'income-tax': IncomeTaxCalculator,
 };
+
 
 export function getCalculatorComponent(id) {
   return CALCULATOR_COMPONENTS[id] || null;
