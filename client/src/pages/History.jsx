@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { Trash2, Clock } from 'lucide-react';
 import { historyAPI } from '../api';
 import { CALCULATORS } from '../utils/calculatorData';
@@ -45,6 +46,7 @@ export default function History() {
         <Clock size={28} strokeWidth={1.5} className="text-accent mb-sp-5" />
         <h1 className="text-2xl font-display font-semibold">Calculation history</h1>
         <p className="text-sm text-muted mt-sp-3">Login to save and view your calculation history.</p>
+        <Link to="/login" className="btn-primary mt-sp-6">Login</Link>
       </div>
     );
   }

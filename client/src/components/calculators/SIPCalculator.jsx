@@ -47,7 +47,7 @@ export default function SIPCalculator() {
       outputs={result}
     >
       <div className="glass-card p-5 lg:p-6 space-y-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-2">Inputs</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted mb-2">Inputs</h3>
         <InputField label="Monthly Investment" name="monthlyInvestment" value={inputs.monthlyInvestment} onChange={handleChange} prefix="₹" tooltip="Amount you invest every month" />
         <InputField label="Expected Return Rate (%)" name="expectedReturnRate" value={inputs.expectedReturnRate} onChange={handleChange} suffix="%" tooltip="Expected annual return. Equity MFs have historically given 12-15% in India." />
         <InputField label="Investment Period (Years)" name="years" value={inputs.years} onChange={handleChange} min={1} max={50} tooltip="How long you plan to invest" />

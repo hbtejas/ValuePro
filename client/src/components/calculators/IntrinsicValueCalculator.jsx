@@ -61,14 +61,15 @@ export default function IntrinsicValueCalculator() {
     >
       <div className="glass-card p-5 lg:p-6 space-y-4">
         {/* Method Tabs */}
-        <div className="grid grid-cols-4 gap-1 bg-surface-tertiary dark:bg-surface-dark-tertiary rounded-xl p-1">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-sp-1 bg-surface-secondary rounded-sm p-sp-1">
           {methods.map((m) => (
             <button
               key={m.id}
-              onClick={() => m.id !== 'dcf' && setMethod(m.id)}
-              className={`py-2 px-2 rounded-lg text-xs font-semibold transition-all
-                ${method === m.id ? 'bg-white dark:bg-surface-dark-secondary shadow-sm text-brand-accent' : 'text-gray-500 hover:text-gray-700'}
-                ${m.id === 'dcf' ? 'opacity-50' : ''}`}
+              onClick={() => setMethod(m.id)}
+              disabled={m.id === 'dcf'}
+              className={`py-sp-3 px-sp-3 rounded-sm text-sm font-semibold transition-colors duration-150
+                ${method === m.id ? 'bg-surface text-accent border border-accent/40' : 'text-muted hover:text-ink hover:bg-surface-secondary'}
+                disabled:cursor-not-allowed disabled:opacity-50`}
             >
               {m.label}
             </button>
@@ -97,12 +98,12 @@ export default function IntrinsicValueCalculator() {
         {result ? (
           <>
             <ResultCard label={`Intrinsic Value (${result.method})`} value={formatINR(result.value, true)} large color="green" tooltip={`Fair value per share using the ${result.method} method`} />
-            <div className="glass-card p-4 text-xs text-gray-500 dark:text-gray-400">
+            <div className="glass-card p-4 text-xs text-muted">
               <p>💡 Compare this with the current market price to assess margin of safety. Use the <strong>Margin of Safety</strong> calculator for a detailed analysis.</p>
             </div>
           </>
         ) : (
-          <div className="glass-card p-8 text-center text-gray-400">Enter valid inputs to see results</div>
+          <div className="glass-card p-8 text-center text-muted">Enter valid inputs to see results</div>
         )}
       </div>
     </CalculatorLayout>

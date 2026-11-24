@@ -66,30 +66,30 @@ export default function XIRRCalculator() {
     <CalculatorLayout calculatorId="xirr" title="XIRR Calculator" description="Calculate annualized returns on irregular cashflows — investments and redemptions at arbitrary dates." explanation="XIRR (Extended Internal Rate of Return) solves for the discount rate that makes the NPV of all cashflows equal to zero. Use negative values for investments and positive for returns. Dates in DD/MM/YYYY format." inputs={rows} outputs={result}>
       <div className="glass-card p-5 lg:p-6 space-y-3">
         <div className="flex justify-between items-center mb-2">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Cashflows</h3>
-          <button onClick={addRow} className="text-xs text-brand-accent font-medium flex items-center gap-1 hover:underline"><Plus size={14} /> Add Row</button>
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted">Cashflows</h3>
+          <button onClick={addRow} className="text-xs text-accent font-medium flex items-center gap-1 hover:underline"><Plus size={14} /> Add Row</button>
         </div>
-        <div className="grid grid-cols-[1fr_1fr_auto] gap-2 text-xs font-medium text-gray-500 mb-1 px-1">
+        <div className="grid grid-cols-[1fr_1fr_auto] gap-2 text-xs font-medium text-muted mb-1 px-1">
           <span>Date (DD/MM/YYYY)</span><span>Amount (₹)</span><span></span>
         </div>
         {rows.map((row, i) => (
           <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-2 items-center">
             <input value={row.date} onChange={(e) => updateRow(i, 'date', e.target.value)} className="input-field text-sm py-2" placeholder="DD/MM/YYYY" />
             <input type="number" value={row.amount} onChange={(e) => updateRow(i, 'amount', e.target.value)} className="input-field text-sm py-2 tabular-nums" placeholder="-100000" />
-            <button onClick={() => removeRow(i)} className="p-2 rounded-lg text-gray-400 hover:text-loss hover:bg-loss/10 transition-colors">
+            <button onClick={() => removeRow(i)} className="p-2 rounded-lg text-muted hover:text-accent hover:bg-accent/10 transition-colors">
               <Trash2 size={14} />
             </button>
           </div>
         ))}
-        <p className="text-[10px] text-gray-400 mt-2">💡 Use negative (−) for investments, positive (+) for returns/withdrawals</p>
+        <p className="text-xs text-muted mt-2">💡 Use negative (−) for investments, positive (+) for returns/withdrawals</p>
       </div>
       <div className="space-y-3">
         {result?.error ? (
-          <div className="glass-card p-5 text-center text-loss text-sm">{result.error}</div>
+          <div className="glass-card p-5 text-center text-accent text-sm">{result.error}</div>
         ) : result?.xirr !== undefined ? (
           <ResultCard label="XIRR" value={formatPercent(result.xirr)} large color={result.xirr >= 0 ? 'green' : 'red'} subValue={result.approx ? 'Approximate' : undefined} tooltip="Annualized return accounting for irregular cash flow timing" />
         ) : (
-          <div className="glass-card p-5 text-center text-gray-400 text-sm">Enter valid cashflows to compute XIRR</div>
+          <div className="glass-card p-5 text-center text-muted text-sm">Enter valid cashflows to compute XIRR</div>
         )}
       </div>
     </CalculatorLayout>

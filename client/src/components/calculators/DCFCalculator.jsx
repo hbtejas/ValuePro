@@ -76,7 +76,7 @@ export default function DCFCalculator() {
     >
       {/* Inputs Panel */}
       <div className="glass-card p-5 lg:p-6 space-y-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-2">Inputs</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted mb-2">Inputs</h3>
         <InputField label="Base FCF (₹ Cr)" name="baseFCF" value={inputs.baseFCF} onChange={handleChange} prefix="₹" tooltip="Most recent year's Free Cash Flow in ₹ Crores" />
         <div className="grid grid-cols-2 gap-3">
           <InputField label="Growth Y1-5 (%)" name="growthRateY1to5" value={inputs.growthRateY1to5} onChange={handleChange} suffix="%" tooltip="Expected FCF growth rate for years 1-5" />
@@ -123,7 +123,7 @@ export default function DCFCalculator() {
             </div>
           </>
         ) : (
-          <div className="glass-card p-8 text-center text-gray-400">
+          <div className="glass-card p-8 text-center text-muted">
             <p>Adjust inputs to see results</p>
           </div>
         )}

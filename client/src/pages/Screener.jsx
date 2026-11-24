@@ -380,7 +380,7 @@ export default function StockScreener() {
             <motion.div
               initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed right-0 top-0 h-full w-full max-w-2xl bg-white dark:bg-surface-dark-secondary z-[70] shadow-2xl flex flex-col"
+              className="fixed right-0 top-0 h-full w-full max-w-2xl bg-surface z-[70] shadow-2xl flex flex-col"
             >
               {/* Header */}
               <div className="flex justify-between items-start px-sp-6 py-sp-5 border-b border-surface-border bg-surface-secondary">
@@ -507,7 +507,7 @@ export default function StockScreener() {
                               { label: 'Other Assets', key: 'otherAssets' },
                               { label: 'Total Assets', key: 'totalAssets', total: true },
                             ].map(row => (
-                              <tr key={row.key} className={row.total ? 'bg-surface-tertiary/20 font-bold' : row.bold ? 'font-medium' : ''}>
+                              <tr key={row.key} className={row.total ? 'bg-surface-tertiary/20 font-semibold' : row.bold ? 'font-medium' : ''}>
                                 <td className="p-3">{row.label}</td>
                                 {selectedStock.financials.balanceSheet.map(s => <td key={s.year} className="p-3 text-right tabular-nums">{(s[row.key] || 0).toLocaleString('en-IN')}</td>)}
                               </tr>
@@ -534,7 +534,7 @@ export default function StockScreener() {
                               { label: 'Tax Expense', key: 'tax' },
                               { label: 'Net Profit', key: 'netProfit', total: true },
                             ].map(row => (
-                              <tr key={row.key} className={row.total ? 'bg-surface-tertiary/20 font-bold' : row.bold ? 'font-semibold' : ''}>
+                              <tr key={row.key} className={row.total ? 'bg-surface-tertiary/20 font-semibold' : row.bold ? 'font-semibold' : ''}>
                                 <td className="p-3">{row.label}</td>
                                 {selectedStock.financials.profitAndLoss.map(s => (
                                   <td key={s.year} className="p-3 text-right tabular-nums">
@@ -562,7 +562,7 @@ export default function StockScreener() {
                               { label: 'Financing Activities', key: 'financingCashFlow' },
                               { label: 'Net Cash Flow', key: 'netCashFlow', total: true },
                             ].map(row => (
-                              <tr key={row.key} className={row.total ? 'bg-surface-tertiary/20 font-bold' : ''}>
+                              <tr key={row.key} className={row.total ? 'bg-surface-tertiary/20 font-semibold' : ''}>
                                 <td className="p-3">{row.label}</td>
                                 {selectedStock.financials.cashFlows.map(s => {
                                   const v = s[row.key] || 0;
@@ -589,7 +589,7 @@ export default function StockScreener() {
                               { label: 'Operating Profit', key: 'operatingProfit' },
                               { label: 'Net Profit', key: 'netProfit', total: true },
                             ].map(row => (
-                              <tr key={row.key} className={row.total ? 'bg-surface-tertiary/20 font-bold' : row.bold ? 'font-semibold' : ''}>
+                              <tr key={row.key} className={row.total ? 'bg-surface-tertiary/20 font-semibold' : row.bold ? 'font-semibold' : ''}>
                                 <td className="p-3">{row.label}</td>
                                 {selectedStock.financials.quarterly.map(s => <td key={s.quarter} className="p-3 text-right tabular-nums">{(s[row.key] || 0).toLocaleString('en-IN')}</td>)}
                               </tr>
@@ -636,13 +636,13 @@ export default function StockScreener() {
                     {/* Pros / Cons */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="p-4 rounded-sm border border-positive/25 bg-positive/5 space-y-2">
-                        <h4 className="text-xs font-bold text-positive flex items-center gap-1.5 uppercase"><CheckCircle size={14} /> Pros</h4>
+                        <h4 className="text-xs font-semibold text-positive flex items-center gap-1.5 uppercase"><CheckCircle size={14} /> Pros</h4>
                         <ul className="text-xs space-y-1.5 list-disc pl-4 text-ink">
                           {selectedStock.pros?.map((p, i) => <li key={i}>{p}</li>)}
                         </ul>
                       </div>
                       <div className="p-4 rounded-sm border border-accent/25 bg-accent/5 space-y-2">
-                        <h4 className="text-xs font-bold text-accent flex items-center gap-1.5 uppercase"><AlertCircle size={14} /> Cons</h4>
+                        <h4 className="text-xs font-semibold text-accent flex items-center gap-1.5 uppercase"><AlertCircle size={14} /> Cons</h4>
                         <ul className="text-xs space-y-1.5 list-disc pl-4 text-ink">
                           {selectedStock.cons?.map((c, i) => <li key={i}>{c}</li>)}
                         </ul>
@@ -683,7 +683,7 @@ export default function StockScreener() {
 
                     {/* Peer Comparison (with names!) */}
                     <div className="space-y-3">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-muted">Peer Comparison</h4>
+                      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted">Peer Comparison</h4>
                       <div className="overflow-x-auto border border-surface-border rounded-sm">
                         <table className="w-full text-left border-collapse text-xs">
                           <thead>
@@ -716,7 +716,7 @@ export default function StockScreener() {
                 {/* ======== SHAREHOLDING ======== */}
                 {activeTab === 'shareholding' && (
                   <div className="space-y-6">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-muted">Ownership Breakdown (% of Shares)</h4>
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-muted">Ownership Breakdown (% of Shares)</h4>
                     <div className="space-y-4">
                       {[
                         { label: 'Promoters', value: selectedStock.shareholding?.promoter, color: 'bg-positive' },
@@ -761,7 +761,7 @@ export default function StockScreener() {
                 {/* ======== DOCUMENTS ======== */}
                 {activeTab === 'docs' && (
                   <div className="space-y-4">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-muted">Announcements, Annual Reports, Credit Ratings & Concalls</h4>
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-muted">Announcements, Annual Reports, Credit Ratings & Concalls</h4>
                     {selectedStock.documents?.map((doc, idx) => (
                       <div key={idx} className="flex items-center justify-between p-4 rounded-sm border border-surface-border">
                         <div>

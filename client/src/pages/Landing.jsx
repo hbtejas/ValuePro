@@ -42,7 +42,7 @@ const steps = [
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-canvas text-ink">
+    <div className="min-h-screen overflow-x-hidden bg-canvas text-ink">
       {/* Header */}
       <header className="sticky top-0 z-30 bg-canvas/95 backdrop-blur border-b border-surface-border">
         <div className="max-w-7xl mx-auto px-sp-6 lg:px-sp-8 h-16 flex items-center justify-between gap-sp-6">

@@ -128,7 +128,7 @@ export default function IncomeTaxCalculator() {
               subValue={result.savings > 0 ? `Save ${formatINR(result.savings)} with New Regime!` : result.savings < 0 ? `Save ${formatINR(Math.abs(result.savings))} with Old Regime!` : 'Regimes are equivalent'}
             />
 
-            <div className="glass-card p-4 text-xs text-gray-500 dark:text-gray-400 space-y-2">
+            <div className="glass-card p-4 text-xs text-muted space-y-2">
               <div className="flex justify-between font-bold border-b pb-1.5 mb-1.5">
                 <span>Metric</span>
                 <span>New Regime</span>

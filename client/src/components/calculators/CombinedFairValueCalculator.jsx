@@ -88,7 +88,7 @@ export default function CombinedFairValueCalculator() {
               {result.methods.map((m) => (
                 <div key={m.method} className="flex justify-between py-1.5 border-b border-surface-border dark:border-surface-dark-border last:border-0 text-sm">
                   <span>{m.method}</span>
-                  <span className={`tabular-nums font-medium ${m.value > inputs.currentPrice ? 'text-gain' : 'text-loss'}`}>
+                  <span className={`tabular-nums font-medium ${m.value > inputs.currentPrice ? 'text-positive' : 'text-accent'}`}>
                     {formatINR(m.value, true)}
                   </span>
                 </div>

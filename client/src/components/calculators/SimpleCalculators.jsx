@@ -42,7 +42,7 @@ export function MarginOfSafetyCalculator() {
                 <div className={`h-full rounded-full transition-all ${result.color === 'green' ? 'bg-gain' : result.color === 'red' ? 'bg-loss' : 'bg-neutral'}`}
                      style={{ width: `${Math.min(100, Math.max(0, result.mos))}%` }} />
               </div>
-              <div className="flex justify-between text-[10px] text-gray-400 mt-1">
+              <div className="flex justify-between text-xs text-muted mt-1">
                 <span>Overvalued</span><span>30% (Buy zone)</span><span>Very Safe</span>
               </div>
             </div>
@@ -523,14 +523,14 @@ export function EPSGrowthCalculator() {
   return (
     <CalculatorLayout calculatorId="eps-growth" title="EPS Growth Calculator" description="Track year-over-year earnings per share growth." explanation="Enter multiple years of EPS data to see YoY growth rates and the overall CAGR." inputs={rows} outputs={result}>
       <div className="glass-card p-5 lg:p-6 space-y-3">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-2">EPS Data</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted mb-2">EPS Data</h3>
         {rows.map((row, i) => (
           <div key={i} className="grid grid-cols-2 gap-2">
             <InputField label={i === 0 ? 'Year' : ''} name={`year-${i}`} value={row.year} onChange={(e) => updateRow(i, 'year', e.target.value)} />
             <InputField label={i === 0 ? 'EPS (₹)' : ''} name={`eps-${i}`} value={row.eps} onChange={(e) => updateRow(i, 'eps', e.target.value)} prefix="₹" />
           </div>
         ))}
-        <button onClick={() => setRows([...rows, { year: (rows[rows.length - 1]?.year || 2024) + 1, eps: 0 }])} className="text-xs text-brand-accent font-medium hover:underline">+ Add Year</button>
+        <button onClick={() => setRows([...rows, { year: (rows[rows.length - 1]?.year || 2024) + 1, eps: 0 }])} className="text-xs text-accent font-medium hover:underline">+ Add Year</button>
       </div>
       <div className="space-y-3">
         {result && (
@@ -542,7 +542,7 @@ export function EPSGrowthCalculator() {
                 <div key={g.year} className="flex justify-between py-1.5 border-b border-surface-border dark:border-surface-dark-border last:border-0 text-sm">
                   <span>{g.year}</span>
                   <span className="tabular-nums">₹{g.eps}</span>
-                  <span className={`tabular-nums font-medium ${g.growth >= 0 ? 'text-gain' : 'text-loss'}`}>{formatPercent(g.growth)}</span>
+                  <span className={`tabular-nums font-medium ${g.growth >= 0 ? 'text-positive' : 'text-accent'}`}>{formatPercent(g.growth)}</span>
                 </div>
               ))}
             </div>
@@ -635,11 +635,11 @@ export function AssetAllocationCalculator() {
       <div className="glass-card p-5 lg:p-6 space-y-4">
         <InputField label="Age" name="age" value={inputs.age} onChange={(e) => setInputs((p) => ({ ...p, age: parseInt(e.target.value) || 0 }))} min={18} max={80} />
         <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Risk Profile</label>
+          <label className="text-sm font-medium text-ink mb-2 block">Risk Profile</label>
           <div className="grid grid-cols-3 gap-2">
             {['Conservative', 'Moderate', 'Aggressive'].map((p) => (
               <button key={p} onClick={() => setInputs((prev) => ({ ...prev, riskProfile: p }))}
-                className={`py-2.5 rounded-xl text-xs font-semibold transition-all ${inputs.riskProfile === p ? 'bg-brand-accent text-white shadow-lg' : 'bg-surface-tertiary dark:bg-surface-dark-tertiary text-gray-600 dark:text-gray-400 hover:bg-surface-border'}`}>
+                className={`py-2.5 rounded-sm text-xs font-semibold transition-all ${inputs.riskProfile === p ? 'bg-accent text-onaccent shadow-lg' : 'bg-surface-secondary text-muted hover:bg-surface-border'}`}>
                 {p}
               </button>
             ))}
@@ -740,7 +740,7 @@ export function PiotroskiFScoreCalculator() {
   return (
     <CalculatorLayout calculatorId="piotroski-f-score" title="Piotroski F-Score" description="9-point test of financial strength — higher is better." explanation="Joseph Piotroski's F-Score tests 9 binary conditions across profitability, leverage, and efficiency. Score 7-9 = Strong, 4-6 = Moderate, 0-3 = Weak." inputs={inputs} outputs={result}>
       <div className="glass-card p-5 lg:p-6 space-y-3">
-        <h3 className="text-sm font-semibold text-gray-500 mb-2">Profitability</h3>
+        <h3 className="text-sm font-semibold text-muted mb-2">Profitability</h3>
         <div className="grid grid-cols-2 gap-2">
           <InputField label="Net Income (₹ Cr)" name="netIncome" value={inputs.netIncome} onChange={handleChange} prefix="₹" />
           <InputField label="Total Assets (₹ Cr)" name="totalAssets" value={inputs.totalAssets} onChange={handleChange} prefix="₹" />
@@ -750,7 +750,7 @@ export function PiotroskiFScoreCalculator() {
           <InputField label="Previous ROA (%)" name="prevROA" value={inputs.prevROA} onChange={handleChange} suffix="%" />
           <InputField label="Current ROA (%)" name="currentROA" value={inputs.currentROA} onChange={handleChange} suffix="%" />
         </div>
-        <h3 className="text-sm font-semibold text-gray-500 mt-4 mb-2">Leverage & Liquidity</h3>
+        <h3 className="text-sm font-semibold text-muted mt-4 mb-2">Leverage & Liquidity</h3>
         <div className="grid grid-cols-2 gap-2">
           <InputField label="Previous Leverage (%)" name="prevLeverage" value={inputs.prevLeverage} onChange={handleChange} suffix="%" />
           <InputField label="Current Leverage (%)" name="currentLeverage" value={inputs.currentLeverage} onChange={handleChange} suffix="%" />
@@ -760,10 +760,10 @@ export function PiotroskiFScoreCalculator() {
           <InputField label="Current Ratio" name="currentCurrentRatio" value={inputs.currentCurrentRatio} onChange={handleChange} />
         </div>
         <label className="flex items-center gap-2 text-sm cursor-pointer">
-          <input type="checkbox" name="sharesIssued" checked={inputs.sharesIssued} onChange={handleChange} className="rounded border-gray-300" />
+          <input type="checkbox" name="sharesIssued" checked={inputs.sharesIssued} onChange={handleChange} className="rounded border-surface-border" />
           New shares issued this year?
         </label>
-        <h3 className="text-sm font-semibold text-gray-500 mt-4 mb-2">Efficiency</h3>
+        <h3 className="text-sm font-semibold text-muted mt-4 mb-2">Efficiency</h3>
         <div className="grid grid-cols-2 gap-2">
           <InputField label="Prev Gross Margin (%)" name="prevGrossMargin" value={inputs.prevGrossMargin} onChange={handleChange} suffix="%" />
           <InputField label="Current Gross Margin (%)" name="currentGrossMargin" value={inputs.currentGrossMargin} onChange={handleChange} suffix="%" />
@@ -782,7 +782,7 @@ export function PiotroskiFScoreCalculator() {
               {result.tests.map((t, i) => (
                 <div key={i} className="flex justify-between py-1.5 border-b border-surface-border dark:border-surface-dark-border last:border-0 text-sm">
                   <span>{t.name}</span>
-                  <span className={t.passed ? 'text-gain font-medium' : 'text-loss'}>{t.passed ? '✓ Pass' : '✗ Fail'}</span>
+                  <span className={t.passed ? 'text-positive font-medium' : 'text-accent'}>{t.passed ? '✓ Pass' : '✗ Fail'}</span>
                 </div>
               ))}
             </div>

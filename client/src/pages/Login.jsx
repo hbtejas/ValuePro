@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { loginStart, loginSuccess, loginFailure, clearError } from '../features/authSlice';
@@ -9,7 +9,7 @@ import { authAPI } from '../api';
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((s) => s.auth);
+  const { loading, error, isAuthenticated } = useSelector((s) => s.auth);
 
   const [isRegister, setIsRegister] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -35,6 +35,10 @@ export default function Login() {
       dispatch(loginFailure(err.response?.data?.message || 'Something went wrong'));
     }
   };
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center py-sp-9">

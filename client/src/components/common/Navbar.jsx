@@ -118,6 +118,7 @@ export default function Navbar({ onMenuToggle }) {
                 onFocus={() => searchResults.length > 0 && setShowSearch(true)}
                 onKeyDown={handleSearchKeys}
                 role="combobox"
+                aria-autocomplete="list"
                 aria-expanded={showSearch}
                 aria-controls="stock-search-results"
                 aria-label="Search stocks"

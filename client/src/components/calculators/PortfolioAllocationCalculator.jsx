@@ -46,24 +46,24 @@ export default function PortfolioAllocationCalculator() {
     <CalculatorLayout calculatorId="portfolio-allocation" title="Portfolio Allocation" description="Analyze your portfolio's sector, market-cap, and stock concentration." explanation="Enter your holdings to see pie charts showing allocation by stock, sector, and SEBI market-cap category. Concentration warnings trigger when any single position exceeds 25%." inputs={holdings} outputs={result}>
       <div className="glass-card p-5 lg:p-6 space-y-3">
         <div className="flex justify-between items-center">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Holdings</h3>
-          <button onClick={addHolding} className="text-xs text-brand-accent font-medium flex items-center gap-1"><Plus size={14} /> Add</button>
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted">Holdings</h3>
+          <button onClick={addHolding} className="text-xs text-accent font-medium flex items-center gap-1"><Plus size={14} /> Add</button>
         </div>
         {holdings.map((h, i) => (
           <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-2 items-end">
             <div className="space-y-1">
-              {i === 0 && <label className="text-[10px] text-gray-500">Stock / Sector</label>}
+              {i === 0 && <label className="text-xs text-muted">Stock / Sector</label>}
               <input value={h.stock} onChange={(e) => updateHolding(i, 'stock', e.target.value)} className="input-field text-sm py-2" placeholder="Stock" />
               <input value={h.sector} onChange={(e) => updateHolding(i, 'sector', e.target.value)} className="input-field text-sm py-2" placeholder="Sector" />
             </div>
             <div className="space-y-1">
-              {i === 0 && <label className="text-[10px] text-gray-500">Cap / Value</label>}
+              {i === 0 && <label className="text-xs text-muted">Cap / Value</label>}
               <select value={h.marketCapCategory} onChange={(e) => updateHolding(i, 'marketCapCategory', e.target.value)} className="input-field text-sm py-2">
                 <option>Large Cap</option><option>Mid Cap</option><option>Small Cap</option>
               </select>
               <input type="number" value={h.value} onChange={(e) => updateHolding(i, 'value', e.target.value)} className="input-field text-sm py-2 tabular-nums" placeholder="₹ Value" />
             </div>
-            <button onClick={() => removeHolding(i)} className="p-2 text-gray-400 hover:text-loss"><Trash2 size={14} /></button>
+            <button onClick={() => removeHolding(i)} className="p-2 text-muted hover:text-accent"><Trash2 size={14} /></button>
           </div>
         ))}
       </div>
@@ -74,8 +74,8 @@ export default function PortfolioAllocationCalculator() {
 
             {result.warnings.length > 0 && (
               <div className="glass-card p-4 border-l-4 border-loss bg-loss/5">
-                <div className="flex items-center gap-2 text-loss text-sm font-semibold mb-1"><AlertTriangle size={16} />Concentration Warning</div>
-                {result.warnings.map((w, i) => <p key={i} className="text-xs text-loss/80">{w}</p>)}
+                <div className="flex items-center gap-2 text-accent text-sm font-semibold mb-1"><AlertTriangle size={16} />Concentration Warning</div>
+                {result.warnings.map((w, i) => <p key={i} className="text-xs text-accent/80">{w}</p>)}
               </div>
             )}
 

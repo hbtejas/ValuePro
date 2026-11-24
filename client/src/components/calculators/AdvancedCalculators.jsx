@@ -106,7 +106,7 @@ export function BeneishMScoreCalculator() {
   return (
     <CalculatorLayout calculatorId="beneish-m-score" title="Beneish M-Score" description="Detect potential earnings manipulation using the 8-variable model." explanation="The Beneish M-Score combines 8 financial ratios (DSRI, GMI, AQI, SGI, DEPI, SGAI, LVGI, TATA) to flag possible earnings manipulation. M-Score > -1.78 indicates potential manipulation." inputs={inputs} outputs={result}>
       <div className="glass-card p-5 lg:p-6 space-y-3">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase">Current Year</h3>
+        <h3 className="text-xs font-semibold text-muted uppercase">Current Year</h3>
         <div className="grid grid-cols-2 gap-2">
           <InputField label="Receivables" name="receivables" value={inputs.receivables} onChange={handleChange} prefix="₹" />
           <InputField label="Revenue" name="revenue" value={inputs.revenue} onChange={handleChange} prefix="₹" />
@@ -127,7 +127,7 @@ export function BeneishMScoreCalculator() {
           <InputField label="Net Income (Ops)" name="netIncomeFromOps" value={inputs.netIncomeFromOps} onChange={handleChange} prefix="₹" />
           <InputField label="Operating CF" name="operatingCashFlow" value={inputs.operatingCashFlow} onChange={handleChange} prefix="₹" />
         </div>
-        <h3 className="text-xs font-semibold text-gray-500 uppercase mt-4">Previous Year</h3>
+        <h3 className="text-xs font-semibold text-muted uppercase mt-4">Previous Year</h3>
         <div className="grid grid-cols-2 gap-2">
           <InputField label="Prev Receivables" name="prevReceivables" value={inputs.prevReceivables} onChange={handleChange} prefix="₹" />
           <InputField label="Prev Revenue" name="prevRevenue" value={inputs.prevRevenue} onChange={handleChange} prefix="₹" />
