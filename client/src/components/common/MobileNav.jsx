@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Calculator, Search, Clock, User } from 'lucide-react';
 
 const tabs = [
@@ -10,6 +10,8 @@ const tabs = [
 ];
 
 export default function MobileNav() {
+  const { pathname } = useLocation();
+
   return (
     <nav
       className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-canvas/95 backdrop-blur border-t border-surface-border"
@@ -23,11 +25,12 @@ export default function MobileNav() {
               key={tab.to}
               to={tab.to}
               end={tab.to === '/'}
-              className={({ isActive }) =>
-                `flex flex-col items-center justify-center gap-sp-1 px-sp-5 py-sp-2 border-t-2 border-transparent
+              className={({ isActive }) => {
+                const active = isActive || (tab.to === '/calculators' && pathname.startsWith('/calculator/'));
+                return `flex flex-col items-center justify-center gap-sp-1 px-sp-5 py-sp-2 border-t-2 border-transparent
                  transition-colors duration-150
-                 ${isActive ? 'border-accent text-accent' : 'text-muted hover:text-ink'}`
-              }
+                 ${active ? 'border-accent text-accent' : 'text-muted hover:text-ink'}`;
+              }}
             >
               {({ isActive }) => (
                 <>

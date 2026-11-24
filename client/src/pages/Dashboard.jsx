@@ -76,6 +76,7 @@ export default function Dashboard() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           aria-label="Search calculators"
+          data-search="calculators"
           className="w-full h-12 pl-sp-9 pr-sp-9 rounded-sm bg-surface border border-surface-border
                      text-base placeholder:text-muted hover:border-muted/60
                      focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/40

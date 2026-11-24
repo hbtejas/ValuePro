@@ -32,7 +32,7 @@ export default function Toast({ type = 'info', message, onClose, duration = 4000
         className={`fixed bottom-20 lg:bottom-auto lg:top-20 right-sp-8 z-50
                     flex items-center gap-sp-5 pl-sp-5 pr-sp-3 py-sp-3
                     panel border-l-2 ${tone.border} shadow-xl`}
-        role="status"
+        role={type === 'error' ? 'alert' : 'status'}
       >
         <Icon size={16} className={tone.icon} />
         <span className="font-mono text-sm">{message}</span>

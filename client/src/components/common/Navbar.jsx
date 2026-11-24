@@ -17,7 +17,9 @@ export default function Navbar({ onMenuToggle }) {
   const [searchResults, setSearchResults] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const searchRef = useRef(null);
+  const inputRef = useRef(null);
   const profileRef = useRef(null);
 
   useEffect(() => {
@@ -30,6 +32,20 @@ export default function Navbar({ onMenuToggle }) {
   }, []);
 
   useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'Escape') {
+        setShowSearch(false);
+        setShowProfile(false);
+        setActiveIndex(-1);
+        inputRef.current?.blur();
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, []);
+
+  useEffect(() => {
+    setActiveIndex(-1);
     if (searchQuery.length < 1) {
       setSearchResults([]);
       return;
@@ -52,6 +68,28 @@ export default function Navbar({ onMenuToggle }) {
     setShowProfile(false);
   };
 
+  const selectStock = (stock) => {
+    setSearchQuery('');
+    setShowSearch(false);
+    setActiveIndex(-1);
+    inputRef.current?.blur();
+    navigate(`/calculator/intrinsic-value?ticker=${stock.ticker}`);
+  };
+
+  const handleSearchKeys = (e) => {
+    if (e.key === 'ArrowDown' && searchResults.length > 0) {
+      e.preventDefault();
+      setShowSearch(true);
+      setActiveIndex((i) => Math.min(i + 1, searchResults.length - 1));
+    } else if (e.key === 'ArrowUp' && searchResults.length > 0) {
+      e.preventDefault();
+      setActiveIndex((i) => Math.max(i - 1, 0));
+    } else if (e.key === 'Enter' && activeIndex >= 0 && searchResults[activeIndex]) {
+      e.preventDefault();
+      selectStock(searchResults[activeIndex]);
+    }
+  };
+
   return (
     <header className="sticky top-0 z-20 bg-canvas/95 backdrop-blur border-b border-surface-border">
       <div className="flex items-center justify-between px-sp-6 lg:px-sp-8 h-16 gap-sp-6">
@@ -72,12 +110,18 @@ export default function Navbar({ onMenuToggle }) {
             <div className="relative">
               <Search size={15} className="absolute left-sp-5 top-1/2 -translate-y-1/2 text-muted" />
               <input
+                ref={inputRef}
                 type="text"
                 placeholder="Search NSE / BSE stocks..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchResults.length > 0 && setShowSearch(true)}
+                onKeyDown={handleSearchKeys}
+                role="combobox"
+                aria-expanded={showSearch}
+                aria-controls="stock-search-results"
                 aria-label="Search stocks"
+                data-search="stocks"
                 className="w-full pl-sp-9 pr-sp-9 py-sp-3 rounded-sm bg-surface border border-surface-border
                            text-sm placeholder:text-muted
                            hover:border-muted/60 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/40
@@ -96,17 +140,18 @@ export default function Navbar({ onMenuToggle }) {
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
+                  id="stock-search-results"
+                  role="listbox"
                   className="absolute top-full mt-sp-3 w-full panel p-sp-2 max-h-64 overflow-y-auto z-50 shadow-xl"
                 >
-                  {searchResults.map((stock) => (
+                  {searchResults.map((stock, index) => (
                     <button
                       key={stock.ticker}
-                      onClick={() => {
-                        setSearchQuery('');
-                        setShowSearch(false);
-                        navigate(`/calculator/intrinsic-value?ticker=${stock.ticker}`);
-                      }}
-                      className="w-full text-left px-sp-5 py-sp-3 rounded-sm hover:bg-surface-secondary transition-colors flex justify-between items-center gap-sp-5"
+                      role="option"
+                      aria-selected={activeIndex === index}
+                      onClick={() => selectStock(stock)}
+                      className={`w-full text-left px-sp-5 py-sp-3 rounded-sm transition-colors duration-150 flex justify-between items-center gap-sp-5
+                        ${activeIndex === index ? 'bg-surface-secondary text-accent' : 'hover:bg-surface-secondary'}`}
                     >
                       <div className="min-w-0">
                         <span className="font-mono text-accent font-semibold">{stock.ticker}</span>

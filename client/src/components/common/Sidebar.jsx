@@ -4,7 +4,7 @@ import { Home, LayoutDashboard, Search, Clock, ChevronDown, ChevronRight, PanelL
 import { CALCULATOR_CATEGORIES } from '../../utils/calculatorData';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function Sidebar({ isOpen, onToggle }) {
+export default function Sidebar({ isOpen, collapsed, onToggleMobile, onToggleCollapse }) {
   const [expandedCategories, setExpandedCategories] = useState(['value-investing']);
   const location = useLocation();
 
@@ -13,6 +13,9 @@ export default function Sidebar({ isOpen, onToggle }) {
       prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
     );
   };
+
+  const compact = collapsed ? 'lg:justify-center lg:px-0' : '';
+  const hidden = collapsed ? 'lg:hidden' : '';
 
   return (
     <>
@@ -23,48 +26,48 @@ export default function Sidebar({ isOpen, onToggle }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/70 z-40 lg:hidden"
-            onClick={onToggle}
+            onClick={onToggleMobile}
           />
         )}
       </AnimatePresence>
 
       <aside
         className={`fixed top-0 left-0 z-50 h-full w-72
+          ${collapsed ? 'lg:w-16' : 'lg:w-72'}
           bg-surface border-r border-surface-border
-          transform transition-transform duration-150 ease-out
+          transform transition-[width,transform] duration-150 ease-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0 lg:static lg:z-auto
           flex flex-col overflow-hidden`}
       >
-        {/* Identity */}
-        <div className="flex items-center justify-between px-sp-6 py-sp-5 hairline">
-          <NavLink to="/" className="flex items-center gap-sp-5 group">
+        <div className={`flex items-center justify-between px-sp-6 py-sp-5 hairline ${collapsed ? 'lg:px-sp-5 lg:justify-center' : ''}`}>
+          <NavLink to="/" className="flex items-center gap-sp-5 min-w-0" title="ValuePro home">
             <div className="w-9 h-9 rounded-sm bg-accent flex items-center justify-center shrink-0">
-              <span className="text-white font-mono font-bold text-lg leading-none">V</span>
+              <span className="text-onaccent font-mono font-semibold text-lg leading-none">V</span>
             </div>
-            <div className="min-w-0">
+            <div className={`min-w-0 ${hidden}`}>
               <h1 className="font-display font-semibold text-base leading-tight truncate">ValuePro</h1>
               <p className="font-mono text-xs uppercase tracking-wider text-muted leading-tight">India / Toolkit</p>
             </div>
           </NavLink>
           <button
-            onClick={onToggle}
-            className="btn-ghost !px-2 !py-2 hidden lg:inline-flex"
-            aria-label="Toggle sidebar"
+            onClick={onToggleCollapse}
+            className={`btn-ghost !px-2 !py-2 hidden lg:inline-flex ${collapsed ? 'absolute right-1 top-3' : ''}`}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-expanded={!collapsed}
           >
-            {isOpen ? <PanelLeftClose size={16} /> : <PanelLeft size={16} />}
+            {collapsed ? <PanelLeft size={16} /> : <PanelLeftClose size={16} />}
           </button>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-sp-5 px-sp-5 space-y-sp-1">
-          <NavLink to="/" end className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-            <Home size={16} strokeWidth={1.75} />
-            <span>Home</span>
+          <NavLink to="/" end title="Home" className={({ isActive }) => `nav-item ${compact} ${isActive ? 'active' : ''}`}>
+            <Home size={16} strokeWidth={1.75} className="shrink-0" />
+            <span className={hidden}>Home</span>
           </NavLink>
-          <NavLink to="/dashboard" end className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-            <LayoutDashboard size={16} strokeWidth={1.75} />
-            <span>Dashboard</span>
+          <NavLink to="/dashboard" end title="Dashboard" className={({ isActive }) => `nav-item ${compact} ${isActive ? 'active' : ''}`}>
+            <LayoutDashboard size={16} strokeWidth={1.75} className="shrink-0" />
+            <span className={hidden}>Dashboard</span>
           </NavLink>
 
           {CALCULATOR_CATEGORIES.map((category) => {
@@ -79,13 +82,18 @@ export default function Sidebar({ isOpen, onToggle }) {
                 <button
                   onClick={() => toggleCategory(category.id)}
                   aria-expanded={isExpanded}
-                  className={`nav-item w-full justify-between ${hasActiveChild ? 'text-accent' : ''}`}
+                  title={category.name}
+                  className={`nav-item w-full justify-between ${compact} ${hasActiveChild ? 'text-accent' : ''}`}
                 >
-                  <div className="flex items-center gap-sp-5">
-                    <Icon size={16} strokeWidth={1.75} className={category.color} />
-                    <span className="font-mono text-xs uppercase tracking-wider">{category.name}</span>
-                  </div>
-                  {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                  <span className="flex items-center gap-sp-5 min-w-0">
+                    <Icon size={16} strokeWidth={1.75} className={`${category.color} shrink-0`} />
+                    <span className={`font-mono text-xs uppercase tracking-wider truncate ${hidden}`}>{category.name}</span>
+                  </span>
+                  {isExpanded ? (
+                    <ChevronDown size={14} className={`shrink-0 ${hidden}`} />
+                  ) : (
+                    <ChevronRight size={14} className={`shrink-0 ${hidden}`} />
+                  )}
                 </button>
 
                 <AnimatePresence>
@@ -95,7 +103,7 @@ export default function Sidebar({ isOpen, onToggle }) {
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="overflow-hidden ml-sp-6 border-l border-surface-border"
+                      className={`overflow-hidden ml-sp-6 border-l border-surface-border ${hidden}`}
                     >
                       {category.calculators.map((calc) => (
                         <NavLink
@@ -116,18 +124,18 @@ export default function Sidebar({ isOpen, onToggle }) {
           })}
 
           <div className="pt-sp-5 mt-sp-5 hairline space-y-sp-1">
-            <NavLink to="/screener" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-              <Search size={16} strokeWidth={1.75} />
-              <span>Screener</span>
+            <NavLink to="/screener" title="Screener" className={({ isActive }) => `nav-item ${compact} ${isActive ? 'active' : ''}`}>
+              <Search size={16} strokeWidth={1.75} className="shrink-0" />
+              <span className={hidden}>Screener</span>
             </NavLink>
-            <NavLink to="/history" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
-              <Clock size={16} strokeWidth={1.75} />
-              <span>History</span>
+            <NavLink to="/history" title="History" className={({ isActive }) => `nav-item ${compact} ${isActive ? 'active' : ''}`}>
+              <Clock size={16} strokeWidth={1.75} className="shrink-0" />
+              <span className={hidden}>History</span>
             </NavLink>
           </div>
         </nav>
 
-        <div className="px-sp-6 py-sp-5 hairline">
+        <div className={`px-sp-6 py-sp-5 hairline ${hidden}`}>
           <p className="font-mono text-xs leading-relaxed text-muted">
             Educational use only. Not investment advice.
           </p>

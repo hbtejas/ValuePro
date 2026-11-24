@@ -152,7 +152,7 @@ export default function Landing() {
         </section>
 
         {/* Capabilities */}
-        <section id="features" className="max-w-7xl mx-auto px-sp-6 lg:px-sp-8 py-sp-9 space-y-sp-9">
+        <section id="features" className="max-w-7xl mx-auto px-sp-6 lg:px-sp-8 py-sp-9 space-y-sp-9 scroll-mt-20">
           <div className="max-w-2xl space-y-sp-3">
             <span className="mono-label !text-accent">// CAPABILITIES</span>
             <h2 className="text-2xl font-display font-semibold">Everything you need to size up a stock.</h2>
@@ -182,7 +182,7 @@ export default function Landing() {
         </section>
 
         {/* Calculator modules */}
-        <section id="calculators" className="border-y border-surface-border bg-surface-secondary/30">
+        <section id="calculators" className="border-y border-surface-border bg-surface-secondary/30 scroll-mt-20">
           <div className="max-w-7xl mx-auto px-sp-6 lg:px-sp-8 py-sp-9 space-y-sp-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-sp-6">
               <div className="space-y-sp-3">
@@ -230,7 +230,7 @@ export default function Landing() {
         </section>
 
         {/* Workflow */}
-        <section id="workflow" className="max-w-7xl mx-auto px-sp-6 lg:px-sp-8 py-sp-9 space-y-sp-8">
+        <section id="workflow" className="max-w-7xl mx-auto px-sp-6 lg:px-sp-8 py-sp-9 space-y-sp-8 scroll-mt-20">
           <div className="space-y-sp-3">
             <span className="mono-label !text-accent">// WORKFLOW</span>
             <h2 className="text-2xl font-display font-semibold">From inputs to insight in three steps.</h2>
