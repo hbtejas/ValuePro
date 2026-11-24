@@ -1,5 +1,5 @@
-import { Info } from 'lucide-react';
 import { useState } from 'react';
+import { Info } from 'lucide-react';
 
 export default function InputField({
   label,
@@ -16,36 +16,39 @@ export default function InputField({
   max,
   step,
   required,
+  disabled,
   className = '',
 }) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <div className={`space-y-1.5 ${className}`}>
-      <div className="flex items-center gap-1.5">
-        <label htmlFor={name} className="text-sm font-medium text-gray-700 dark:text-gray-300">
+    <div className={`space-y-sp-3 ${className}`}>
+      <div className="flex items-center justify-between gap-sp-3">
+        <label htmlFor={name} className="mono-label">
           {label}
-          {required && <span className="text-loss ml-0.5">*</span>}
+          {required && <span className="text-accent ml-sp-1">*</span>}
         </label>
+
         {tooltip && (
           <div className="relative">
             <button
               type="button"
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
+              onFocus={() => setShowTooltip(true)}
+              onBlur={() => setShowTooltip(false)}
               onClick={() => setShowTooltip(!showTooltip)}
-              className="text-gray-400 hover:text-brand-accent transition-colors"
+              className="text-muted hover:text-accent transition-colors duration-150"
               aria-label={`Info about ${label}`}
             >
               <Info size={14} />
             </button>
             {showTooltip && (
-              <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-3 
-                              glass-card text-xs text-gray-600 dark:text-gray-300 shadow-xl">
+              <div
+                role="tooltip"
+                className="absolute z-50 bottom-full right-0 mb-sp-3 w-56 p-sp-5 panel shadow-xl text-sm text-muted"
+              >
                 {tooltip}
-                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 
-                                w-2 h-2 rotate-45 bg-white dark:bg-surface-dark-secondary border-r border-b 
-                                border-surface-border dark:border-surface-dark-border" />
               </div>
             )}
           </div>
@@ -54,7 +57,7 @@ export default function InputField({
 
       <div className="relative">
         {prefix && (
-          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-gray-500 font-medium tabular-nums">
+          <span className="absolute left-sp-5 top-1/2 -translate-y-1/2 font-mono text-sm text-muted pointer-events-none">
             {prefix}
           </span>
         )}
@@ -68,18 +71,21 @@ export default function InputField({
           min={min}
           max={max}
           step={step || (type === 'number' ? 'any' : undefined)}
-          className={`input-field tabular-nums ${prefix ? 'pl-8' : ''} ${suffix ? 'pr-12' : ''} ${error ? 'border-loss ring-1 ring-loss/30' : ''}`}
+          disabled={disabled}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${name}-error` : undefined}
+          className={`input-field tabular-nums font-mono ${prefix ? 'pl-sp-9' : ''} ${suffix ? 'pr-sp-9' : ''} ${error ? '!border-accent !ring-1 !ring-accent/40' : ''}`}
         />
         {suffix && (
-          <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-gray-500">
+          <span className="absolute right-sp-5 top-1/2 -translate-y-1/2 font-mono text-sm text-muted pointer-events-none">
             {suffix}
           </span>
         )}
       </div>
 
       {error && (
-        <p className="text-xs text-loss flex items-center gap-1">
-          <span>⚠</span> {error}
+        <p id={`${name}-error`} className="font-mono text-xs text-accent">
+          ! {error}
         </p>
       )}
     </div>

@@ -69,14 +69,14 @@ export default function CombinedFairValueCalculator() {
               <h3 className="text-sm font-semibold mb-4">Valuation Comparison vs Current Price</h3>
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={result.methods} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--bc-border))" />
                   <XAxis type="number" tick={{ fontSize: 10 }} />
                   <YAxis dataKey="method" type="category" tick={{ fontSize: 11 }} width={60} />
                   <Tooltip formatter={(v) => [formatINR(v, true), 'Fair Value']} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                  <ReferenceLine x={inputs.currentPrice} stroke="#DC2626" strokeDasharray="5 5" label={{ value: `CMP ₹${inputs.currentPrice}`, fill: '#DC2626', fontSize: 10 }} />
+                  <ReferenceLine x={inputs.currentPrice} stroke="#F97316" strokeDasharray="5 5" label={{ value: `CMP ₹${inputs.currentPrice}`, fill: '#F97316', fontSize: 10 }} />
                   <Bar dataKey="value" radius={[0, 6, 6, 0]}>
                     {result.methods.map((m, i) => (
-                      <Cell key={i} fill={m.value > inputs.currentPrice ? '#16A34A' : '#DC2626'} />
+                      <Cell key={i} fill={m.value > inputs.currentPrice ? '#10B981' : '#F97316'} />
                     ))}
                   </Bar>
                 </BarChart>

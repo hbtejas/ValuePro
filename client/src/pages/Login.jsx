@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { loginStart, loginSuccess, loginFailure, clearError } from '../features/authSlice';
@@ -37,123 +37,124 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center">
+    <div className="min-h-[70vh] flex items-center justify-center py-sp-9">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
         className="w-full max-w-md"
       >
-        <div className="glass-card p-8">
-          {/* Logo */}
-          <div className="flex items-center gap-2.5 mb-8">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-accent to-brand-accent-hover flex items-center justify-center">
-              <span className="text-white font-bold text-xl">V</span>
-            </div>
-            <div>
-              <h1 className="font-display font-bold text-xl">ValuePro India</h1>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">Stock Valuation Toolkit</p>
-            </div>
+        <div className="panel">
+          <div className="flex items-center justify-between px-sp-6 py-sp-3 bg-surface-secondary border-b border-surface-border">
+            <span className="font-mono text-xs text-muted">valuepro / auth</span>
+            <span className="font-mono text-xs text-accent">{isRegister ? 'REGISTER' : 'LOGIN'}</span>
           </div>
 
-          <h2 className="text-xl font-bold mb-1">
-            {isRegister ? 'Create Account' : 'Welcome Back'}
-          </h2>
-          <p className="text-sm text-gray-500 mb-6">
-            {isRegister ? 'Start your investment analysis journey' : 'Login to save and track your calculations'}
-          </p>
-
-          {error && (
-            <div className="mb-4 px-4 py-3 rounded-xl bg-loss/10 border border-loss/20 text-sm text-loss">
-              {error}
+          <div className="p-sp-8 space-y-sp-8">
+            <div>
+              <span className="mono-label !text-accent">// ACCOUNT ACCESS</span>
+              <h1 className="text-2xl font-display font-semibold mt-sp-3">
+                {isRegister ? 'Create account' : 'Welcome back'}
+              </h1>
+              <p className="text-sm text-muted mt-sp-3">
+                {isRegister
+                  ? 'Start your investment analysis journey.'
+                  : 'Login to save and track your calculations.'}
+              </p>
             </div>
-          )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {isRegister && (
-              <div className="relative">
-                <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  name="name"
-                  type="text"
-                  placeholder="Full name"
-                  value={form.name}
-                  onChange={handleChange}
-                  className="input-field pl-10"
-                  required
-                />
+            {error && (
+              <div role="alert" className="border-l-2 border-accent bg-accent/10 px-sp-5 py-sp-3 font-mono text-sm text-accent">
+                ! {error}
               </div>
             )}
 
-            <div className="relative">
-              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                name="email"
-                type="email"
-                placeholder="Email address"
-                value={form.email}
-                onChange={handleChange}
-                className="input-field pl-10"
-                required
-              />
-            </div>
-
-            <div className="relative">
-              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Password"
-                value={form.password}
-                onChange={handleChange}
-                className="input-field pl-10 pr-10"
-                required
-                minLength={6}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              {loading ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <>
-                  {isRegister ? 'Create Account' : 'Login'}
-                  <ArrowRight size={16} />
-                </>
+            <form onSubmit={handleSubmit} className="space-y-sp-6">
+              {isRegister && (
+                <div className="relative">
+                  <User size={15} className="absolute left-sp-5 top-1/2 -translate-y-1/2 text-muted" />
+                  <input
+                    name="name"
+                    type="text"
+                    placeholder="Full name"
+                    value={form.name}
+                    onChange={handleChange}
+                    className="input-field pl-sp-9 font-mono"
+                    required
+                    disabled={loading}
+                  />
+                </div>
               )}
-            </button>
-          </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-500">
-              {isRegister ? 'Already have an account?' : "Don't have an account?"}
-              <button
-                onClick={() => {
-                  setIsRegister(!isRegister);
-                  dispatch(clearError());
-                }}
-                className="ml-1 text-brand-accent font-semibold hover:underline"
-              >
-                {isRegister ? 'Login' : 'Register'}
+              <div className="relative">
+                <Mail size={15} className="absolute left-sp-5 top-1/2 -translate-y-1/2 text-muted" />
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="Email address"
+                  value={form.email}
+                  onChange={handleChange}
+                  className="input-field pl-sp-9 font-mono"
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="relative">
+                <Lock size={15} className="absolute left-sp-5 top-1/2 -translate-y-1/2 text-muted" />
+                <input
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Password"
+                  value={form.password}
+                  onChange={handleChange}
+                  className="input-field pl-sp-9 pr-sp-9 font-mono"
+                  required
+                  minLength={6}
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-sp-5 top-1/2 -translate-y-1/2 text-muted hover:text-accent transition-colors duration-150"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              </div>
+
+              <button type="submit" disabled={loading} className="btn-primary w-full h-11">
+                {loading ? (
+                  <span className="w-sp-5 h-sp-5 border-2 border-onaccent/30 border-t-onaccent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    {isRegister ? 'Create account' : 'Login'}
+                    <ArrowRight size={15} />
+                  </>
+                )}
               </button>
-            </p>
-          </div>
+            </form>
 
-          {/* Demo credentials hint */}
-          <div className="mt-4 p-3 rounded-xl bg-surface-tertiary dark:bg-surface-dark-tertiary text-xs text-gray-500">
-            <p className="font-medium mb-1">Demo credentials:</p>
-            <p>Email: demo@valuepro.in</p>
-            <p>Password: demo123456</p>
+            <div className="hairline pt-sp-6">
+              <p className="text-sm text-muted">
+                {isRegister ? 'Already have an account?' : "Don't have an account?"}
+                <button
+                  onClick={() => {
+                    setIsRegister(!isRegister);
+                    dispatch(clearError());
+                  }}
+                  className="ml-sp-3 text-accent font-semibold hover:underline transition-colors duration-150"
+                >
+                  {isRegister ? 'Login' : 'Register'}
+                </button>
+              </p>
+            </div>
+
+            <div className="bg-surface-secondary border border-surface-border rounded-sm p-sp-5 font-mono text-xs text-muted space-y-sp-1">
+              <p className="text-ink">// demo credentials</p>
+              <p>email &nbsp; demo@valuepro.in</p>
+              <p>password &nbsp; demo123456</p>
+            </div>
           </div>
         </div>
       </motion.div>

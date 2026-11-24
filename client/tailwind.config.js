@@ -1,78 +1,131 @@
 /** @type {import('tailwindcss').Config} */
+const surface = (name) => `rgb(var(${name}) / <alpha-value>)`;
+
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
     extend: {
       colors: {
+        // BureauCat chromatic palette — the only four colors in the system
+        accent: '#F97316',        // color-1
+        positive: '#10B981',      // color-2
+        warning: '#F59E0B',       // color-3
+        light: '#FFFFFF',         // color-4
+
+        // Achromatic surfaces (neutral by design, resolved per theme)
+        canvas: surface('--bc-canvas'),
+        ink: surface('--bc-ink'),
+        muted: surface('--bc-muted'),
+        onaccent: surface('--bc-on-accent'),
+        surface: {
+          DEFAULT: surface('--bc-surface'),
+          secondary: surface('--bc-surface-2'),
+          raised: surface('--bc-surface-3'),
+          border: surface('--bc-border'),
+          'dark-primary': surface('--bc-canvas'),
+          'dark-secondary': surface('--bc-surface'),
+          'dark-tertiary': surface('--bc-surface-2'),
+          'dark-border': surface('--bc-border'),
+        },
+
+        // Legacy aliases kept so every calculator inherits the new system
         brand: {
-          navy: '#0B1F3A',
-          'navy-light': '#122D52',
-          'navy-dark': '#071628',
-          accent: '#E97B2C', // Saffron-adjacent orange for CTAs
-          'accent-hover': '#D06A1F',
-          teal: '#0D9488',
+          navy: surface('--bc-surface-3'),
+          'navy-light': surface('--bc-surface-3'),
+          'navy-dark': surface('--bc-canvas'),
+          accent: '#F97316',
+          'accent-hover': '#F97316',
+          teal: '#10B981',
         },
         gain: {
-          DEFAULT: '#16A34A',
-          light: '#22C55E',
-          dark: '#15803D',
-          bg: '#052E16',
+          DEFAULT: '#10B981',
+          light: '#10B981',
+          dark: '#10B981',
+          bg: surface('--bc-surface-2'),
         },
         loss: {
-          DEFAULT: '#DC2626',
-          light: '#EF4444',
-          dark: '#B91C1C',
-          bg: '#450A0A',
+          DEFAULT: '#F97316',
+          light: '#F97316',
+          dark: '#F97316',
+          bg: surface('--bc-surface-2'),
         },
         neutral: {
-          DEFAULT: '#D97706',
+          DEFAULT: '#F59E0B',
           light: '#F59E0B',
-          dark: '#B45309',
-          bg: '#451A03',
-        },
-        surface: {
-          DEFAULT: '#FFFFFF',
-          secondary: '#F8FAFC',
-          tertiary: '#F1F5F9',
-          border: '#E2E8F0',
-          'dark-primary': '#0F172A',
-          'dark-secondary': '#1E293B',
-          'dark-tertiary': '#334155',
-          'dark-border': '#475569',
+          dark: '#F59E0B',
+          bg: surface('--bc-surface-2'),
         },
       },
+
       fontFamily: {
-        sans: ['Inter', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-        display: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
-        hindi: ['Noto Sans Devanagari', 'sans-serif'],
+        sans: ['Inter Variable', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        display: ['Inter Variable', 'Inter', 'sans-serif'],
+        hindi: ['Inter Variable', 'Inter', 'sans-serif'],
       },
-      fontVariantNumeric: {
-        tabular: 'tabular-nums',
+
+      fontSize: {
+        xs: ['9px', { lineHeight: '11.22px' }],
+        sm: ['11px', { lineHeight: '14.2857px' }],
+        base: ['14px', { lineHeight: '20px' }],
+        lg: ['16px', { lineHeight: '24px' }],
+        xl: ['18px', { lineHeight: '27.5px' }],
+        '2xl': ['20px', { lineHeight: '28px' }],
+        '3xl': ['48px', { lineHeight: '50.4px' }],
+        '4xl': ['68px', { lineHeight: '69.36px' }],
       },
-      animation: {
-        'fade-in': 'fadeIn 0.3s ease-out',
-        'slide-up': 'slideUp 0.3s ease-out',
-        'slide-in-right': 'slideInRight 0.3s ease-out',
-        'pulse-subtle': 'pulseSubtle 2s infinite',
+
+      spacing: {
+        'sp-1': '2px',
+        'sp-2': '6px',
+        'sp-3': '8px',
+        'sp-4': '10px',
+        'sp-5': '12px',
+        'sp-6': '16px',
+        'sp-7': '20px',
+        'sp-8': '24px',
+        'sp-9': '32px',
       },
+
+      borderRadius: {
+        none: '0px',
+        sm: '1px',
+        DEFAULT: '4px',
+        md: '4px',
+        lg: '4px',
+        xl: '6px',
+        '2xl': '16px',
+        '3xl': '16px',
+        full: '16px',
+        pill: '2.68435e+07px',
+      },
+
+      boxShadow: {
+        sm: 'oklch(0.205 0 0) 0px 0px 0px 2px',
+        md: 'rgba(0, 0, 0, 0.05) 0px 1px 2px 0px',
+        lg: 'rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px',
+        xl: 'rgba(0, 0, 0, 0.35) 0px 30px 60px -30px',
+      },
+
       keyframes: {
-        fadeIn: {
+        rise: {
+          '0%': { opacity: '0', transform: 'translateY(12px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fade: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
-        slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+        flow: {
+          '0%': { strokeDashoffset: '24' },
+          '100%': { strokeDashoffset: '0' },
         },
-        slideInRight: {
-          '0%': { opacity: '0', transform: 'translateX(20px)' },
-          '100%': { opacity: '1', transform: 'translateX(0)' },
-        },
-        pulseSubtle: {
-          '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.85' },
-        },
+      },
+      animation: {
+        rise: 'rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.12s both',
+        fade: 'fade 0.3s 1.6s both',
+        flow: 'flow 1.4s linear infinite',
       },
     },
   },

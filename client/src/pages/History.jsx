@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import { Trash2, Filter, Clock } from 'lucide-react';
+import { Trash2, Clock } from 'lucide-react';
 import { historyAPI } from '../api';
 import { CALCULATORS } from '../utils/calculatorData';
-import { formatDate, formatINR } from '../utils/formatters';
+import { formatDate } from '../utils/formatters';
 
 export default function History() {
   const { isAuthenticated } = useSelector((s) => s.auth);
@@ -35,68 +35,73 @@ export default function History() {
       await historyAPI.remove(id);
       setHistory((prev) => prev.filter((h) => h._id !== id));
     } catch {
-      // handle error
+      // The record stays in the list when the request fails.
     }
   };
 
   if (!isAuthenticated) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
-        <Clock size={48} className="text-gray-300 dark:text-gray-600 mb-4" />
-        <h2 className="text-xl font-bold mb-2">Calculation History</h2>
-        <p className="text-sm text-gray-500 mb-4">Login to save and view your calculation history</p>
+      <div className="panel p-sp-9 max-w-xl">
+        <Clock size={28} strokeWidth={1.5} className="text-accent mb-sp-5" />
+        <h1 className="text-2xl font-display font-semibold">Calculation history</h1>
+        <p className="text-sm text-muted mt-sp-3">Login to save and view your calculation history.</p>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-sp-5">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="skeleton h-20 w-full" />
+          <div key={i} className="skeleton h-16 w-full" />
         ))}
       </div>
     );
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <h1 className="text-2xl font-display font-bold mb-6">Calculation History</h1>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-sp-8">
+      <div className="flex items-end justify-between gap-sp-6">
+        <div>
+          <span className="mono-label !text-accent">// ARCHIVE</span>
+          <h1 className="text-2xl font-display font-semibold mt-sp-3">Calculation history</h1>
+        </div>
+        <span className="font-mono text-xs text-muted">{String(history.length).padStart(2, '0')} RECORDS</span>
+      </div>
 
       {history.length === 0 ? (
-        <div className="flex flex-col items-center justify-center min-h-[40vh] text-center">
-          <Clock size={48} className="text-gray-300 dark:text-gray-600 mb-4" />
-          <p className="text-gray-500">No saved calculations yet</p>
-          <p className="text-xs text-gray-400 mt-1">Use any calculator and click "Save" to start tracking</p>
+        <div className="panel p-sp-9 max-w-xl">
+          <Clock size={28} strokeWidth={1.5} className="text-muted mb-sp-5" />
+          <p className="text-base font-semibold">No saved calculations</p>
+          <p className="text-sm text-muted mt-sp-3">Use any calculator and click “Save” to start tracking.</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="panel divide-y divide-surface-border">
           {history.map((record) => {
             const calc = CALCULATORS[record.calculatorType];
             const Icon = calc?.icon;
             return (
-              <div key={record._id} className="glass-card p-4 flex items-center gap-4">
+              <div key={record._id} className="flex items-center gap-sp-6 p-sp-6 hover:bg-surface-secondary transition-colors duration-150">
                 {Icon && (
-                  <div className="w-10 h-10 rounded-xl bg-brand-accent/10 flex items-center justify-center shrink-0">
-                    <Icon size={18} className="text-brand-accent" />
+                  <div className="w-9 h-9 rounded-sm bg-accent/10 flex items-center justify-center shrink-0">
+                    <Icon size={16} strokeWidth={1.75} className="text-accent" />
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-semibold truncate">{calc?.name || record.calculatorType}</h3>
+                  <div className="flex items-center gap-sp-3">
+                    <h2 className="text-sm font-semibold truncate">{calc?.name || record.calculatorType}</h2>
                     {record.stockTicker && (
-                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-surface-tertiary dark:bg-surface-dark-tertiary">
+                      <span className="font-mono text-xs text-accent border border-accent/25 bg-accent/10 rounded-pill px-sp-3 py-0.5">
                         {record.stockTicker}
                       </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-gray-500 mt-0.5">
-                    {formatDate(record.createdAt)}
-                  </p>
+                  <p className="font-mono text-xs text-muted mt-sp-1">{formatDate(record.createdAt)}</p>
                 </div>
                 <button
                   onClick={() => handleDelete(record._id)}
-                  className="p-2 rounded-lg hover:bg-loss/10 text-gray-400 hover:text-loss transition-colors"
+                  className="p-sp-3 rounded-sm text-muted hover:text-accent hover:bg-accent/10 transition-colors duration-150"
+                  aria-label={`Delete ${calc?.name || 'record'}`}
                 >
                   <Trash2 size={16} />
                 </button>

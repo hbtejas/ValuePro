@@ -1,30 +1,35 @@
-import { Info } from 'lucide-react';
 import { useState } from 'react';
+import { Info } from 'lucide-react';
 import { getBadgeClass } from '../../utils/formatters';
 
 export default function ResultCard({ label, value, subValue, color, tooltip, large, className = '' }) {
   const [showTooltip, setShowTooltip] = useState(false);
 
+  const valueColor =
+    color === 'green' ? 'text-positive' :
+    color === 'red' ? 'text-accent' :
+    color === 'amber' ? 'text-warning' :
+    'text-ink';
+
   return (
-    <div className={`glass-card p-4 lg:p-5 ${className}`}>
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-          {label}
-        </span>
+    <div className={`panel p-sp-6 hover:border-accent/40 transition-colors duration-150 ${className}`}>
+      <div className="flex items-start justify-between gap-sp-3 mb-sp-5">
+        <span className="mono-label">{label}</span>
         {tooltip && (
           <div className="relative">
             <button
               type="button"
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
-              className="text-gray-400 hover:text-brand-accent transition-colors"
+              onFocus={() => setShowTooltip(true)}
+              onBlur={() => setShowTooltip(false)}
+              className="text-muted hover:text-accent transition-colors duration-150"
               aria-label={`Info: ${label}`}
             >
               <Info size={14} />
             </button>
             {showTooltip && (
-              <div className="absolute z-50 bottom-full right-0 mb-2 w-56 p-3 
-                              glass-card text-xs text-gray-600 dark:text-gray-300 shadow-xl">
+              <div role="tooltip" className="absolute z-50 bottom-full right-0 mb-sp-3 w-56 p-sp-5 panel shadow-xl text-sm text-muted">
                 {tooltip}
               </div>
             )}
@@ -32,15 +37,14 @@ export default function ResultCard({ label, value, subValue, color, tooltip, lar
         )}
       </div>
 
-      <div className={`tabular-nums font-bold ${large ? 'text-2xl lg:text-3xl' : 'text-lg lg:text-xl'} 
-                        ${color === 'green' ? 'text-gain' : color === 'red' ? 'text-loss' : color === 'amber' ? 'text-neutral' : 'text-gray-900 dark:text-white'}`}>
+      <div className={`font-mono font-semibold tabular-nums break-words ${large ? 'text-3xl' : 'text-2xl'} ${valueColor}`}>
         {value}
       </div>
 
       {subValue && (
-        <div className="mt-1.5">
+        <div className="mt-sp-5">
           {typeof subValue === 'string' ? (
-            <span className={`${color ? getBadgeClass(color) : 'text-xs text-gray-500'}`}>
+            <span className={color ? getBadgeClass(color) : 'font-mono text-xs text-muted'}>
               {subValue}
             </span>
           ) : (

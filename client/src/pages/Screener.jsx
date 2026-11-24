@@ -198,9 +198,9 @@ export default function StockScreener() {
   });
 
   const getRiskBadge = (cat) => {
-    if (cat === 'High') return 'bg-loss/10 text-loss border border-loss/20';
-    if (cat === 'Medium') return 'bg-neutral/10 text-neutral border border-neutral/20';
-    return 'bg-gain/10 text-gain border border-gain/20';
+    if (cat === 'High') return 'bg-accent/10 text-accent border border-accent/25';
+    if (cat === 'Medium') return 'bg-warning/10 text-warning border border-warning/25';
+    return 'bg-positive/10 text-positive border border-positive/25';
   };
 
   const formatVol = (v) => {
@@ -211,36 +211,37 @@ export default function StockScreener() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-sp-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-sp-6">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-display font-bold text-gray-900 dark:text-white">
-            🔍 Stock Screener & Risk Advisor
-          </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Live charts, financial statements, shareholding, peer comparison & risk analysis.
+          <span className="mono-label !text-accent">// MARKET INTELLIGENCE</span>
+          <h1 className="text-2xl font-display font-semibold mt-sp-3">Stock screener &amp; risk advisor</h1>
+          <p className="text-sm text-muted mt-sp-3">
+            Live charts, financial statements, shareholding, peer comparison &amp; risk analysis.
           </p>
         </div>
-        <button onClick={loadScreenerData} className="btn-secondary text-sm flex items-center gap-2 self-start md:self-auto">
-          <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+        <button onClick={loadScreenerData} className="btn-secondary self-start md:self-auto">
+          <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
           Reload
         </button>
       </div>
 
       {/* Search with Autocomplete + Filters */}
-      <div className="glass-card p-5 space-y-4">
-        <form onSubmit={handleAddNewTicker} className="flex gap-2 max-w-lg">
+      <div className="panel p-sp-6 space-y-sp-5">
+        <form onSubmit={handleAddNewTicker} className="flex gap-sp-3 max-w-2xl">
           <div className="relative flex-1" ref={searchRef}>
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
+            <Search size={15} className="absolute left-sp-5 top-1/2 -translate-y-1/2 text-muted z-10" />
             <input
               type="text"
-              placeholder="Type stock name or ticker (e.g. Reliance, TCS, HDFC)..."
+              placeholder="Type stock name or ticker — Reliance, TCS, HDFC..."
               value={searchQuery}
               onChange={handleSearchChange}
               onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
-              className="w-full pl-9 pr-4 py-2 border border-surface-border dark:border-surface-dark-border
-                         bg-white dark:bg-surface-dark-tertiary rounded-xl text-sm"
+              className="w-full pl-sp-9 pr-sp-5 py-sp-3 border border-surface-border bg-canvas rounded-sm
+                         text-base placeholder:text-muted hover:border-muted/60
+                         focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/40
+                         transition-colors duration-150"
               autoComplete="off"
             />
 
@@ -251,21 +252,21 @@ export default function StockScreener() {
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  className="absolute left-0 right-0 top-full mt-1 bg-white dark:bg-surface-dark-secondary border border-surface-border dark:border-surface-dark-border rounded-xl shadow-xl z-50 overflow-hidden max-h-72 overflow-y-auto"
+                  className="absolute left-0 right-0 top-full mt-sp-3 panel shadow-xl z-50 overflow-hidden max-h-72 overflow-y-auto"
                 >
                   {suggestions.map((s, idx) => (
                     <button
                       key={`${s.ticker}-${idx}`}
                       type="button"
                       onClick={() => selectSuggestion(s)}
-                      className="w-full text-left px-4 py-3 hover:bg-surface-tertiary dark:hover:bg-surface-dark-tertiary transition-colors flex items-center justify-between border-b border-surface-border/30 last:border-0"
+                      className="w-full text-left px-sp-6 py-sp-5 hover:bg-surface-secondary transition-colors flex items-center justify-between gap-sp-5 border-b border-surface-border last:border-0"
                     >
-                      <div>
-                        <span className="font-semibold text-sm text-gray-900 dark:text-white">{s.name}</span>
-                        <span className="text-[10px] text-gray-400 block mt-0.5 font-mono">{s.ticker} • {s.exchange}</span>
+                      <div className="min-w-0">
+                        <span className="font-semibold text-sm text-ink truncate block">{s.name}</span>
+                        <span className="text-xs text-muted block mt-sp-1 font-mono">{s.ticker} · {s.exchange}</span>
                       </div>
                       {s.source === 'local' && (
-                        <span className="text-[9px] bg-gain/10 text-gain px-1.5 py-0.5 rounded font-semibold uppercase">DB</span>
+                        <span className="font-mono text-xs bg-positive/10 text-positive px-sp-3 py-0.5 rounded-sm uppercase">DB</span>
                       )}
                     </button>
                   ))}
@@ -273,18 +274,20 @@ export default function StockScreener() {
               )}
             </AnimatePresence>
           </div>
-          <button type="submit" disabled={loading} className="btn-primary py-2 text-sm shrink-0">Add</button>
+          <button type="submit" disabled={loading} className="btn-primary shrink-0">Add</button>
           <button
             type="button"
             onClick={() => setShowFilters(!showFilters)}
-            className={`p-2 rounded-xl border flex items-center justify-center shrink-0 transition-colors
-              ${showFilters ? 'bg-brand-accent/10 border-brand-accent text-brand-accent' : 'border-surface-border dark:border-surface-dark-border hover:bg-surface-tertiary'}`}
+            aria-label="Toggle filters"
+            aria-expanded={showFilters}
+            className={`p-sp-3 rounded-sm border flex items-center justify-center shrink-0 transition-colors duration-150
+              ${showFilters ? 'bg-accent/10 border-accent text-accent' : 'border-surface-border hover:bg-surface-secondary'}`}
           >
             <SlidersHorizontal size={18} />
           </button>
         </form>
 
-        {errorMsg && <p className="text-xs text-loss">{errorMsg}</p>}
+        {errorMsg && <p className="font-mono text-xs text-accent">! {errorMsg}</p>}
 
         <AnimatePresence>
           {showFilters && (
@@ -292,21 +295,21 @@ export default function StockScreener() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3 border-t border-surface-border dark:border-surface-dark-border overflow-hidden"
+              className="grid grid-cols-1 md:grid-cols-3 gap-sp-6 pt-sp-5 hairline overflow-hidden"
             >
               <div>
-                <label className="text-xs font-semibold text-gray-500 block mb-1.5">Market Cap</label>
-                <select value={selectedCap} onChange={(e) => setSelectedCap(e.target.value)} className="input-field py-2 text-sm">
+                <label className="mono-label block mb-sp-3">Market cap</label>
+                <select value={selectedCap} onChange={(e) => setSelectedCap(e.target.value)} className="input-field font-mono text-sm">
                   <option>All</option><option>Large Cap</option><option>Mid Cap</option><option>Small Cap</option>
                 </select>
               </div>
               <div>
-                <label className="text-xs font-semibold text-gray-500 block mb-1.5">Max P/E</label>
-                <input type="number" placeholder="e.g. 35" value={maxPE} onChange={(e) => setMaxPE(e.target.value)} className="input-field py-2 text-sm" />
+                <label className="mono-label block mb-sp-3">Max P/E</label>
+                <input type="number" placeholder="e.g. 35" value={maxPE} onChange={(e) => setMaxPE(e.target.value)} className="input-field font-mono text-sm" />
               </div>
               <div>
-                <label className="text-xs font-semibold text-gray-500 block mb-1.5">Max Debt/Equity (x)</label>
-                <input type="number" placeholder="e.g. 1.5" step="0.1" value={maxDE} onChange={(e) => setMaxDE(e.target.value)} className="input-field py-2 text-sm" />
+                <label className="mono-label block mb-sp-3">Max debt / equity (x)</label>
+                <input type="number" placeholder="e.g. 1.5" step="0.1" value={maxDE} onChange={(e) => setMaxDE(e.target.value)} className="input-field font-mono text-sm" />
               </div>
             </motion.div>
           )}
@@ -314,19 +317,19 @@ export default function StockScreener() {
       </div>
 
       {/* Screener Table */}
-      <div className="glass-card overflow-hidden">
+      <div className="panel overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-sm">
             <thead>
-              <tr className="bg-surface-tertiary dark:bg-surface-dark-tertiary text-gray-500 font-semibold border-b border-surface-border dark:border-surface-dark-border">
-                <th className="px-5 py-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={() => handleSort('companyName')}>Company</th>
-                <th className="px-5 py-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={() => handleSort('currentPrice')}>Price</th>
-                <th className="px-5 py-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={() => handleSort('peRatio')}>P/E</th>
-                <th className="px-5 py-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={() => handleSort('debtToEquity')}>Debt/Equity</th>
-                <th className="px-5 py-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800" onClick={() => handleSort('risk')}>Risk</th>
+              <tr className="bg-surface-secondary text-muted border-b border-surface-border">
+                <th className="px-sp-6 py-sp-5 cursor-pointer hover:text-accent transition-colors duration-150 font-mono text-xs uppercase tracking-wider" onClick={() => handleSort('companyName')}>Company</th>
+                <th className="px-sp-6 py-sp-5 cursor-pointer hover:text-accent transition-colors duration-150 font-mono text-xs uppercase tracking-wider" onClick={() => handleSort('currentPrice')}>Price</th>
+                <th className="px-sp-6 py-sp-5 cursor-pointer hover:text-accent transition-colors duration-150 font-mono text-xs uppercase tracking-wider" onClick={() => handleSort('peRatio')}>P/E</th>
+                <th className="px-sp-6 py-sp-5 cursor-pointer hover:text-accent transition-colors duration-150 font-mono text-xs uppercase tracking-wider" onClick={() => handleSort('debtToEquity')}>Debt / Equity</th>
+                <th className="px-sp-6 py-sp-5 cursor-pointer hover:text-accent transition-colors duration-150 font-mono text-xs uppercase tracking-wider" onClick={() => handleSort('risk')}>Risk</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-border dark:divide-surface-dark-border">
+            <tbody className="divide-y divide-surface-border">
               {loading && stocks.length === 0 ? (
                 [...Array(4)].map((_, i) => (
                   <tr key={i}>
@@ -342,19 +345,19 @@ export default function StockScreener() {
                   const deVal = stock.debtToEquity > 10 ? stock.debtToEquity / 100 : stock.debtToEquity;
                   const mCapInCr = Math.round(stock.marketCap / 10000000);
                   return (
-                    <tr key={stock.ticker} onClick={() => { setSelectedStock(stock); setActiveTab('financials'); setChartRange('1y'); }} className="hover:bg-surface-tertiary dark:hover:bg-surface-dark-tertiary cursor-pointer transition-colors">
-                      <td className="px-5 py-4">
-                        <div className="font-semibold text-gray-900 dark:text-white">{stock.companyName}</div>
-                        <div className="text-[10px] text-gray-500 mt-0.5">
-                          <span className="font-mono bg-surface-tertiary dark:bg-surface-dark-tertiary px-1 py-0.5 rounded">{stock.ticker}</span>
-                          <span> • {stock.sector} • {mCapInCr.toLocaleString('en-IN')} Cr</span>
+                    <tr key={stock.ticker} onClick={() => { setSelectedStock(stock); setActiveTab('financials'); setChartRange('1y'); }} className="hover:bg-surface-secondary cursor-pointer transition-colors duration-150">
+                      <td className="px-sp-6 py-sp-5">
+                        <div className="font-semibold text-ink">{stock.companyName}</div>
+                        <div className="text-xs text-muted mt-sp-1">
+                          <span className="font-mono bg-surface-secondary text-accent px-sp-2 py-0.5 rounded-sm">{stock.ticker}</span>
+                          <span> · {stock.sector} · {mCapInCr.toLocaleString('en-IN')} Cr</span>
                         </div>
                       </td>
-                      <td className="px-5 py-4 font-semibold tabular-nums">{formatINR(stock.currentPrice, true)}</td>
-                      <td className="px-5 py-4 tabular-nums">{stock.peRatio ? stock.peRatio.toFixed(1) : '—'}</td>
-                      <td className="px-5 py-4 tabular-nums">{deVal ? `${deVal.toFixed(2)}x` : '—'}</td>
-                      <td className="px-5 py-4">
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${getRiskBadge(stock.risk.category)}`}>
+                      <td className="px-sp-6 py-sp-5 font-semibold tabular-nums font-mono">{formatINR(stock.currentPrice, true)}</td>
+                      <td className="px-sp-6 py-sp-5 tabular-nums font-mono">{stock.peRatio ? stock.peRatio.toFixed(1) : '—'}</td>
+                      <td className="px-sp-6 py-sp-5 tabular-nums font-mono">{deVal ? `${deVal.toFixed(2)}x` : '—'}</td>
+                      <td className="px-sp-6 py-sp-5">
+                        <span className={`px-sp-3 py-0.5 rounded-pill font-mono text-xs uppercase tracking-wider ${getRiskBadge(stock.risk.category)}`}>
                           {stock.risk.category} ({stock.risk.aggregateScore})
                         </span>
                       </td>
@@ -362,7 +365,7 @@ export default function StockScreener() {
                   );
                 })
               ) : (
-                <tr><td colSpan="5" className="text-center py-12 text-gray-400">No stocks matching filters</td></tr>
+                <tr><td colSpan="5" className="px-sp-6 py-sp-9 text-muted">No stocks matching filters</td></tr>
               )}
             </tbody>
           </table>
@@ -380,29 +383,29 @@ export default function StockScreener() {
               className="fixed right-0 top-0 h-full w-full max-w-2xl bg-white dark:bg-surface-dark-secondary z-[70] shadow-2xl flex flex-col"
             >
               {/* Header */}
-              <div className="flex justify-between items-start px-6 py-5 border-b border-surface-border dark:border-surface-dark-border bg-surface-tertiary dark:bg-surface-dark-tertiary">
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">{selectedStock.companyName}</h2>
-                  <p className="text-xs text-gray-500 mt-1">
-                    <span className="font-mono bg-white dark:bg-surface-dark-secondary px-1.5 py-0.5 rounded border border-surface-border dark:border-surface-dark-border">{selectedStock.ticker}</span>
-                    <span> • {selectedStock.sector} • {selectedStock.dataSource}</span>
+              <div className="flex justify-between items-start px-sp-6 py-sp-5 border-b border-surface-border bg-surface-secondary">
+                <div className="min-w-0">
+                  <h2 className="text-xl font-semibold text-ink truncate">{selectedStock.companyName}</h2>
+                  <p className="text-xs text-muted mt-sp-2">
+                    <span className="font-mono bg-surface border border-surface-border px-sp-3 py-0.5 rounded-sm text-accent">{selectedStock.ticker}</span>
+                    <span> · {selectedStock.sector} · {selectedStock.dataSource}</span>
                   </p>
                 </div>
-                <button onClick={() => setSelectedStock(null)} className="p-1.5 rounded-lg hover:bg-surface-border/50 transition-colors"><X size={20} /></button>
+                <button onClick={() => setSelectedStock(null)} className="btn-ghost !p-2 shrink-0" aria-label="Close stock details"><X size={18} /></button>
               </div>
 
               {/* Tabs */}
-              <div className="flex border-b border-surface-border dark:border-surface-dark-border px-4 overflow-x-auto bg-surface-tertiary/30 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
+              <div className="flex border-b border-surface-border px-sp-5 overflow-x-auto bg-surface-secondary/40 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
                 {[
-                  { id: 'financials', label: '📊 Financials' },
-                  { id: 'insights', label: '💡 Insights & Peers' },
-                  { id: 'shareholding', label: '🤝 Shareholding' },
-                  { id: 'news', label: '📰 News' },
-                  { id: 'docs', label: '📄 Docs' },
+                  { id: 'financials', label: 'Financials' },
+                  { id: 'insights', label: 'Insights & Peers' },
+                  { id: 'shareholding', label: 'Shareholding' },
+                  { id: 'news', label: 'News' },
+                  { id: 'docs', label: 'Docs' },
                 ].map((t) => (
                   <button key={t.id} onClick={() => setActiveTab(t.id)}
-                    className={`py-3 px-3 text-xs font-semibold border-b-2 transition-colors whitespace-nowrap
-                      ${activeTab === t.id ? 'border-brand-accent text-brand-accent' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                    className={`py-sp-5 px-sp-5 font-mono text-xs uppercase tracking-wider border-b-2 transition-colors duration-150 whitespace-nowrap
+                      ${activeTab === t.id ? 'border-accent text-accent' : 'border-transparent text-muted hover:text-ink'}`}
                   >{t.label}</button>
                 ))}
               </div>
@@ -415,37 +418,37 @@ export default function StockScreener() {
                   <div className="space-y-6">
 
                     {/* REAL PRICE CHART */}
-                    <div className="glass-card p-4 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">Price Chart — {selectedStock.ticker}</h4>
-                        <div className="flex gap-1">
+                    <div className="panel p-sp-6 space-y-sp-5">
+                      <div className="flex items-center justify-between gap-sp-5">
+                        <h4 className="mono-label">Price chart / {selectedStock.ticker}</h4>
+                        <div className="flex gap-sp-1">
                           {RANGE_OPTIONS.map((r) => (
                             <button key={r.value} onClick={() => setChartRange(r.value)}
-                              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase transition-all
-                                ${chartRange === r.value ? 'bg-brand-accent text-white' : 'bg-surface-tertiary dark:bg-surface-dark-tertiary text-gray-500 hover:text-gray-700'}`}
+                              className={`px-sp-3 py-sp-1 rounded-sm font-mono text-xs uppercase transition-colors duration-150
+                                ${chartRange === r.value ? 'bg-accent text-onaccent' : 'bg-surface-secondary text-muted hover:text-ink'}`}
                             >{r.label}</button>
                           ))}
                         </div>
                       </div>
 
                       {chartLoading ? (
-                        <div className="h-48 flex items-center justify-center text-gray-400 text-sm">Loading chart...</div>
+                        <div className="h-48 flex items-center justify-center text-muted text-sm">Loading chart...</div>
                       ) : chartData.length > 0 ? (
                         <div className="h-64 w-full">
                           <ResponsiveContainer width="100%" height="100%">
                             <ComposedChart data={chartData} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
                               <defs>
                                 <linearGradient id="priceGrad" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.15}/>
-                                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                                  <stop offset="5%" stopColor="#F97316" stopOpacity={0.15}/>
+                                  <stop offset="95%" stopColor="#F97316" stopOpacity={0}/>
                                 </linearGradient>
                               </defs>
-                              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.3} />
-                              <XAxis dataKey="date" tick={{ fontSize: 9 }} tickFormatter={(d) => { const dt = new Date(d); return dt.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' }); }} interval="preserveStartEnd" minTickGap={40} />
-                              <YAxis yAxisId="price" orientation="right" tick={{ fontSize: 9 }} domain={['auto', 'auto']} tickFormatter={(v) => `₹${v}`} />
-                              <YAxis yAxisId="volume" orientation="left" tick={{ fontSize: 8 }} tickFormatter={formatVol} domain={[0, 'auto']} hide={false} />
+                              <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--bc-border))" opacity={0.6} />
+                              <XAxis dataKey="date" tick={{ fontSize: 9, fill: 'rgb(var(--bc-muted))' }} tickFormatter={(d) => { const dt = new Date(d); return dt.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' }); }} interval="preserveStartEnd" minTickGap={40} />
+                              <YAxis yAxisId="price" orientation="right" tick={{ fontSize: 9, fill: 'rgb(var(--bc-muted))' }} domain={['auto', 'auto']} tickFormatter={(v) => `₹${v}`} />
+                              <YAxis yAxisId="volume" orientation="left" tick={{ fontSize: 8, fill: 'rgb(var(--bc-muted))' }} tickFormatter={formatVol} domain={[0, 'auto']} hide={false} />
                               <Tooltip
-                                contentStyle={{ borderRadius: 12, fontSize: 11, border: '1px solid #e5e7eb' }}
+                                contentStyle={{ borderRadius: 4, fontSize: 11, border: '1px solid rgb(var(--bc-border))', background: 'rgb(var(--bc-surface))' }}
                                 labelFormatter={(d) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                                 formatter={(value, name) => {
                                   if (name === 'volume') return [formatVol(value), 'Volume'];
@@ -453,20 +456,20 @@ export default function StockScreener() {
                                 }}
                               />
                               <Legend iconSize={8} wrapperStyle={{ fontSize: 10 }} />
-                              <Bar yAxisId="volume" dataKey="volume" fill="#a5b4fc" opacity={0.3} name="Volume" barSize={2} />
-                              <Area yAxisId="price" type="monotone" dataKey="close" stroke="#6366f1" fill="url(#priceGrad)" strokeWidth={1.5} dot={false} name="Price on NSE" />
-                              <Line yAxisId="price" type="monotone" dataKey="ma50" stroke="#f59e0b" strokeWidth={1.2} dot={false} name="50 DMA" connectNulls={false} />
-                              <Line yAxisId="price" type="monotone" dataKey="ma200" stroke="#10b981" strokeWidth={1.2} dot={false} name="200 DMA" connectNulls={false} />
+                              <Bar yAxisId="volume" dataKey="volume" fill="#F97316" opacity={0.25} name="Volume" barSize={2} />
+                              <Area yAxisId="price" type="monotone" dataKey="close" stroke="#F97316" fill="url(#priceGrad)" strokeWidth={1.5} dot={false} name="Price on NSE" />
+                              <Line yAxisId="price" type="monotone" dataKey="ma50" stroke="#F59E0B" strokeWidth={1.2} dot={false} name="50 DMA" connectNulls={false} />
+                              <Line yAxisId="price" type="monotone" dataKey="ma200" stroke="#10B981" strokeWidth={1.2} dot={false} name="200 DMA" connectNulls={false} />
                             </ComposedChart>
                           </ResponsiveContainer>
                         </div>
                       ) : (
-                        <div className="h-48 flex items-center justify-center text-gray-400 text-sm">No chart data available</div>
+                        <div className="h-48 flex items-center justify-center text-muted text-sm">No chart data available</div>
                       )}
                     </div>
 
                     {/* Sub-Tabs: Balance Sheet, P&L, Cash Flows, Quarterly */}
-                    <div className="flex gap-1 p-1 bg-surface-tertiary dark:bg-surface-dark-tertiary rounded-xl text-xs font-semibold overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+                    <div className="flex gap-sp-1 p-sp-1 bg-surface-secondary border border-surface-border rounded-sm overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
                       {[
                         { id: 'balanceSheet', label: 'Balance Sheet' },
                         { id: 'profitAndLoss', label: 'Profit & Loss' },
@@ -475,19 +478,19 @@ export default function StockScreener() {
                         { id: 'ratios', label: 'Ratios' }
                       ].map((sub) => (
                         <button key={sub.id} onClick={() => setActiveFinancialTab(sub.id)}
-                          className={`flex-1 py-1.5 px-2 rounded-lg text-center transition-colors text-[11px]
-                            ${activeFinancialTab === sub.id ? 'bg-white dark:bg-surface-dark-secondary text-brand-navy shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                          className={`flex-1 py-sp-3 px-sp-3 rounded-sm text-center transition-colors duration-150 font-mono text-xs whitespace-nowrap
+                            ${activeFinancialTab === sub.id ? 'bg-surface border border-accent/40 text-accent' : 'text-muted hover:text-ink'}`}
                         >{sub.label}</button>
                       ))}
                     </div>
 
                     {/* Statement Tables */}
-                    <div className="overflow-x-auto border border-surface-border dark:border-surface-dark-border rounded-xl">
+                    <div className="overflow-x-auto border border-surface-border rounded-sm">
                       {activeFinancialTab === 'balanceSheet' && selectedStock.financials?.balanceSheet && (
                         <table className="w-full text-left border-collapse text-xs">
                           <thead>
                             <tr className="bg-surface-tertiary dark:bg-surface-dark-tertiary border-b border-surface-border dark:border-surface-dark-border">
-                              <th className="p-3 font-semibold text-gray-500">Particulars (₹ Cr)</th>
+                              <th className="p-3 font-semibold text-muted">Particulars (₹ Cr)</th>
                               {selectedStock.financials.balanceSheet.map(s => <th key={s.year} className="p-3 font-semibold text-right">{s.year}</th>)}
                             </tr>
                           </thead>
@@ -517,7 +520,7 @@ export default function StockScreener() {
                         <table className="w-full text-left border-collapse text-xs">
                           <thead>
                             <tr className="bg-surface-tertiary dark:bg-surface-dark-tertiary border-b border-surface-border">
-                              <th className="p-3 font-semibold text-gray-500">P&L Line (₹ Cr)</th>
+                              <th className="p-3 font-semibold text-muted">P&L Line (₹ Cr)</th>
                               {selectedStock.financials.profitAndLoss.map(s => <th key={s.year} className="p-3 font-semibold text-right">{s.year}</th>)}
                             </tr>
                           </thead>
@@ -548,7 +551,7 @@ export default function StockScreener() {
                         <table className="w-full text-left border-collapse text-xs">
                           <thead>
                             <tr className="bg-surface-tertiary dark:bg-surface-dark-tertiary border-b border-surface-border">
-                              <th className="p-3 font-semibold text-gray-500">Cash Flow (₹ Cr)</th>
+                              <th className="p-3 font-semibold text-muted">Cash Flow (₹ Cr)</th>
                               {selectedStock.financials.cashFlows.map(s => <th key={s.year} className="p-3 font-semibold text-right">{s.year}</th>)}
                             </tr>
                           </thead>
@@ -563,7 +566,7 @@ export default function StockScreener() {
                                 <td className="p-3">{row.label}</td>
                                 {selectedStock.financials.cashFlows.map(s => {
                                   const v = s[row.key] || 0;
-                                  return <td key={s.year} className={`p-3 text-right tabular-nums ${v < 0 ? 'text-loss' : ''}`}>{v < 0 ? `(${Math.abs(v).toLocaleString('en-IN')})` : v.toLocaleString('en-IN')}</td>;
+                                  return <td key={s.year} className={`p-3 text-right tabular-nums ${v < 0 ? 'text-accent' : ''}`}>{v < 0 ? `(${Math.abs(v).toLocaleString('en-IN')})` : v.toLocaleString('en-IN')}</td>;
                                 })}
                               </tr>
                             ))}
@@ -575,7 +578,7 @@ export default function StockScreener() {
                         <table className="w-full text-left border-collapse text-xs">
                           <thead>
                             <tr className="bg-surface-tertiary dark:bg-surface-dark-tertiary border-b border-surface-border">
-                              <th className="p-3 font-semibold text-gray-500">Quarter (₹ Cr)</th>
+                              <th className="p-3 font-semibold text-muted">Quarter (₹ Cr)</th>
                               {selectedStock.financials.quarterly.map(s => <th key={s.quarter} className="p-3 font-semibold text-right">{s.quarter}</th>)}
                             </tr>
                           </thead>
@@ -599,7 +602,7 @@ export default function StockScreener() {
                         <table className="w-full text-left border-collapse text-xs">
                           <thead>
                             <tr className="bg-surface-tertiary dark:bg-surface-dark-tertiary border-b border-surface-border">
-                              <th className="p-3 font-semibold text-gray-500">Ratio</th>
+                              <th className="p-3 font-semibold text-muted">Ratio</th>
                               {selectedStock.financials.ratios.map(s => <th key={s.year} className="p-3 font-semibold text-right">{s.year}</th>)}
                             </tr>
                           </thead>
@@ -632,56 +635,56 @@ export default function StockScreener() {
                   <div className="space-y-6">
                     {/* Pros / Cons */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="p-4 rounded-xl border border-gain/15 bg-gain/5 space-y-2">
-                        <h4 className="text-xs font-bold text-gain flex items-center gap-1.5 uppercase"><CheckCircle size={14} /> Pros</h4>
-                        <ul className="text-xs space-y-1.5 list-disc pl-4 text-gray-700 dark:text-gray-300">
+                      <div className="p-4 rounded-sm border border-positive/25 bg-positive/5 space-y-2">
+                        <h4 className="text-xs font-bold text-positive flex items-center gap-1.5 uppercase"><CheckCircle size={14} /> Pros</h4>
+                        <ul className="text-xs space-y-1.5 list-disc pl-4 text-ink">
                           {selectedStock.pros?.map((p, i) => <li key={i}>{p}</li>)}
                         </ul>
                       </div>
-                      <div className="p-4 rounded-xl border border-loss/15 bg-loss/5 space-y-2">
-                        <h4 className="text-xs font-bold text-loss flex items-center gap-1.5 uppercase"><AlertCircle size={14} /> Cons</h4>
-                        <ul className="text-xs space-y-1.5 list-disc pl-4 text-gray-700 dark:text-gray-300">
+                      <div className="p-4 rounded-sm border border-accent/25 bg-accent/5 space-y-2">
+                        <h4 className="text-xs font-bold text-accent flex items-center gap-1.5 uppercase"><AlertCircle size={14} /> Cons</h4>
+                        <ul className="text-xs space-y-1.5 list-disc pl-4 text-ink">
                           {selectedStock.cons?.map((c, i) => <li key={i}>{c}</li>)}
                         </ul>
                       </div>
                     </div>
 
                     {/* Risk Summary */}
-                    <div className="p-5 rounded-2xl bg-gradient-to-br from-brand-navy to-brand-navy-light text-white space-y-4">
+                    <div className="panel p-sp-6 space-y-sp-5">
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="text-[10px] uppercase font-bold text-brand-accent tracking-wider block">Risk Status</span>
-                          <div className="text-xl font-bold flex items-center gap-2 mt-1">
-                            <span className="px-3 py-0.5 rounded-full text-xs font-bold uppercase bg-white/15">{selectedStock.risk.category}</span>
+                          <span className="mono-label !text-accent">Risk status</span>
+                          <div className="text-xl font-mono font-semibold flex items-center gap-sp-3 mt-sp-2">
+                            <span className="px-sp-3 py-0.5 rounded-pill font-mono text-xs uppercase bg-surface-secondary border border-surface-border">{selectedStock.risk.category}</span>
                             <span>{selectedStock.risk.aggregateScore} / 100</span>
                           </div>
                         </div>
                       </div>
-                      <div className="w-full h-3 rounded-full bg-white/20 overflow-hidden">
-                        <div className={`h-full rounded-full transition-all duration-500 ${selectedStock.risk.category === 'High' ? 'bg-loss' : selectedStock.risk.category === 'Medium' ? 'bg-neutral' : 'bg-gain'}`}
+                      <div className="w-full h-3 rounded-pill bg-surface-border overflow-hidden">
+                        <div className={`h-full rounded-pill transition-all duration-500 ${selectedStock.risk.category === 'High' ? 'bg-accent' : selectedStock.risk.category === 'Medium' ? 'bg-warning' : 'bg-positive'}`}
                           style={{ width: `${selectedStock.risk.aggregateScore}%` }} />
                       </div>
-                      <div className="grid grid-cols-3 gap-2 text-[10px]">
-                        <div><span className="block text-white/60">Solvency</span><span className="font-bold">{selectedStock.risk.breakdown.solvency}/40</span></div>
-                        <div><span className="block text-white/60">Valuation</span><span className="font-bold">{selectedStock.risk.breakdown.valuation}/40</span></div>
-                        <div><span className="block text-white/60">Sentiment</span><span className="font-bold">{selectedStock.risk.breakdown.sentiment}/20</span></div>
+                      <div className="grid grid-cols-3 gap-sp-3 font-mono text-xs">
+                        <div><span className="block text-muted">Solvency</span><span className="font-semibold">{selectedStock.risk.breakdown.solvency}/40</span></div>
+                        <div><span className="block text-muted">Valuation</span><span className="font-semibold">{selectedStock.risk.breakdown.valuation}/40</span></div>
+                        <div><span className="block text-muted">Sentiment</span><span className="font-semibold">{selectedStock.risk.breakdown.sentiment}/20</span></div>
                       </div>
                     </div>
 
                     {/* Warnings */}
                     {selectedStock.risk.warnings?.length > 0 && (
                       <div className="space-y-2">
-                        <h4 className="text-xs font-semibold text-loss flex items-center gap-1.5"><AlertTriangle size={14} /> Warnings</h4>
+                        <h4 className="text-xs font-semibold text-accent flex items-center gap-1.5"><AlertTriangle size={14} /> Warnings</h4>
                         <ul className="space-y-1.5">
-                          {selectedStock.risk.warnings.map((w, i) => <li key={i} className="text-xs text-gray-600 dark:text-gray-300 pl-4 border-l-2 border-loss py-0.5">{w}</li>)}
+                          {selectedStock.risk.warnings.map((w, i) => <li key={i} className="text-xs text-muted pl-4 border-l-2 border-accent py-0.5">{w}</li>)}
                         </ul>
                       </div>
                     )}
 
                     {/* Peer Comparison (with names!) */}
                     <div className="space-y-3">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">Peer Comparison</h4>
-                      <div className="overflow-x-auto border border-surface-border dark:border-surface-dark-border rounded-xl">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-muted">Peer Comparison</h4>
+                      <div className="overflow-x-auto border border-surface-border rounded-sm">
                         <table className="w-full text-left border-collapse text-xs">
                           <thead>
                             <tr className="bg-surface-tertiary dark:bg-surface-dark-tertiary border-b border-surface-border">
@@ -693,10 +696,10 @@ export default function StockScreener() {
                           </thead>
                           <tbody className="divide-y divide-surface-border dark:divide-surface-dark-border">
                             {selectedStock.peers?.map((peer) => (
-                              <tr key={peer.ticker} className={peer.ticker === selectedStock.ticker ? 'bg-brand-accent/5 font-semibold' : ''}>
+                              <tr key={peer.ticker} className={peer.ticker === selectedStock.ticker ? 'bg-accent/5 font-semibold' : ''}>
                                 <td className="p-3">
-                                  <div className="font-semibold text-gray-900 dark:text-white">{peer.name}</div>
-                                  <div className="text-[10px] text-gray-400 font-mono mt-0.5">{peer.ticker}</div>
+                                  <div className="font-semibold text-ink">{peer.name}</div>
+                                  <div className="text-xs text-muted font-mono mt-0.5">{peer.ticker}</div>
                                 </td>
                                 <td className="p-3 text-right tabular-nums">{typeof peer.price === 'number' ? peer.price.toLocaleString('en-IN') : '—'}</td>
                                 <td className="p-3 text-right tabular-nums">{peer.pe ? peer.pe.toFixed(1) : '—'}</td>
@@ -713,13 +716,13 @@ export default function StockScreener() {
                 {/* ======== SHAREHOLDING ======== */}
                 {activeTab === 'shareholding' && (
                   <div className="space-y-6">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">Ownership Breakdown (% of Shares)</h4>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-muted">Ownership Breakdown (% of Shares)</h4>
                     <div className="space-y-4">
                       {[
-                        { label: 'Promoters', value: selectedStock.shareholding?.promoter, color: 'bg-emerald-500' },
-                        { label: 'Foreign Institutional Investors (FII)', value: selectedStock.shareholding?.fii, color: 'bg-blue-500' },
-                        { label: 'Domestic Institutional Investors (DII)', value: selectedStock.shareholding?.dii, color: 'bg-violet-500' },
-                        { label: 'Public & Retail Shareholders', value: selectedStock.shareholding?.public, color: 'bg-amber-500' },
+                        { label: 'Promoters', value: selectedStock.shareholding?.promoter, color: 'bg-positive' },
+                        { label: 'Foreign Institutional Investors (FII)', value: selectedStock.shareholding?.fii, color: 'bg-accent' },
+                        { label: 'Domestic Institutional Investors (DII)', value: selectedStock.shareholding?.dii, color: 'bg-warning' },
+                        { label: 'Public & Retail Shareholders', value: selectedStock.shareholding?.public, color: 'bg-muted' },
                       ].map((item) => (
                         <div key={item.label} className="space-y-1">
                           <div className="flex justify-between text-xs font-semibold">
@@ -740,32 +743,32 @@ export default function StockScreener() {
                   <div className="space-y-4">
                     {selectedStock.news?.length > 0 ? selectedStock.news.map((item, idx) => (
                       <a key={idx} href={item.link} target="_blank" rel="noopener noreferrer"
-                        className="block p-4 rounded-xl border border-surface-border dark:border-surface-dark-border hover:border-brand-accent/50 hover:bg-surface-tertiary/20 transition-all group">
+                        className="block p-4 rounded-sm border border-surface-border hover:border-accent/50 hover:bg-surface-secondary transition-all group">
                         <div className="flex justify-between items-start gap-3">
-                          <h4 className="text-sm font-semibold group-hover:text-brand-accent transition-colors leading-snug">{item.title}</h4>
+                          <h4 className="text-sm font-semibold group-hover:text-accent transition-colors leading-snug">{item.title}</h4>
                           <ExternalLink size={14} className="opacity-0 group-hover:opacity-60 transition-opacity shrink-0 mt-0.5" />
                         </div>
-                        <div className="flex items-center gap-2 text-[10px] text-gray-500 mt-2.5">
+                        <div className="flex items-center gap-2 text-xs text-muted mt-2.5">
                           <span className="font-semibold">{item.publisher}</span>
                           <span>•</span>
                           <span>{new Date(item.time).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
                         </div>
                       </a>
-                    )) : <div className="text-center py-12 text-gray-400">No recent news articles</div>}
+                    )) : <div className="px-sp-6 py-sp-9 text-muted">No recent news articles</div>}
                   </div>
                 )}
 
                 {/* ======== DOCUMENTS ======== */}
                 {activeTab === 'docs' && (
                   <div className="space-y-4">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">Announcements, Annual Reports, Credit Ratings & Concalls</h4>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-muted">Announcements, Annual Reports, Credit Ratings & Concalls</h4>
                     {selectedStock.documents?.map((doc, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-4 rounded-xl border border-surface-border dark:border-surface-dark-border">
+                      <div key={idx} className="flex items-center justify-between p-4 rounded-sm border border-surface-border">
                         <div>
-                          <span className="px-2 py-0.5 text-[9px] uppercase font-bold rounded bg-brand-navy/15 dark:bg-brand-navy-light/35 text-brand-navy dark:text-white block w-max">{doc.type}</span>
-                          <span className="text-xs font-semibold mt-1.5 block text-gray-900 dark:text-white">{doc.name}</span>
+                          <span className="px-2 py-0.5 font-mono text-xs uppercase rounded-sm bg-surface-secondary border border-surface-border text-accent block w-max">{doc.type}</span>
+                          <span className="text-xs font-semibold mt-1.5 block text-ink">{doc.name}</span>
                         </div>
-                        <button className="p-2 text-gray-400 hover:text-brand-accent hover:bg-surface-tertiary rounded-xl transition-all"><Download size={16} /></button>
+                        <button className="p-2 text-muted hover:text-accent hover:bg-surface-secondary rounded-sm transition-all"><Download size={16} /></button>
                       </div>
                     ))}
                   </div>

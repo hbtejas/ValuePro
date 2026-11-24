@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, TrendingUp, Search, X } from 'lucide-react';
+import { ArrowRight, Search, X } from 'lucide-react';
 import { CALCULATOR_CATEGORIES, CALCULATORS } from '../utils/calculatorData';
 import { selectMostUsed } from '../features/calculatorSlice';
 
@@ -12,85 +12,97 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 15 },
+  hidden: { opacity: 0, y: 12 },
   show: { opacity: 1, y: 0 },
 };
 
 export default function Dashboard() {
   const recentlyUsed = useSelector((s) => s.calculator.recentlyUsed);
-  const mostUsed = useSelector(selectMostUsed);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Filter categories and calculators based on search query
-  const filteredCategories = CALCULATOR_CATEGORIES.map((category) => {
-    const matchingCalcs = category.calculators.filter(
+  const filteredCategories = CALCULATOR_CATEGORIES.map((category) => ({
+    ...category,
+    calculators: category.calculators.filter(
       (calc) =>
         calc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         calc.description.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    return { ...category, calculators: matchingCalcs };
-  }).filter((category) => category.calculators.length > 0);
+    ),
+  })).filter((category) => category.calculators.length > 0);
+
+  const totalResults = filteredCategories.reduce((sum, c) => sum + c.calculators.length, 0);
 
   return (
-    <div className="space-y-8">
-      {/* Hero */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
+    <div className="space-y-sp-9">
+      {/* Console hero */}
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-navy via-brand-navy-light to-brand-navy 
-                    px-6 lg:px-10 py-8 lg:py-10 text-white"
+        transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1], delay: 0.12 }}
+        className="panel overflow-hidden"
       >
-        <div className="relative z-10">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles size={16} className="text-brand-accent" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-brand-accent">India Edition</span>
-          </div>
-          <h1 className="text-2xl lg:text-4xl font-display font-bold mb-2">
-            Stock Valuation & Investment Toolkit
-          </h1>
-          <p className="text-sm lg:text-base text-gray-300 max-w-xl">
-            30+ professional-grade calculators for Indian retail investors. 
-            DCF, Graham, Piotroski, SIP, XIRR, and more — all with ₹ lakh/crore formatting.
-          </p>
+        <div className="flex items-center justify-between px-sp-6 py-sp-3 bg-surface-secondary border-b border-surface-border">
+          <span className="font-mono text-xs text-muted flex items-center gap-sp-3">
+            <span className="w-sp-2 h-sp-2 rounded-full bg-accent" />
+            valuepro / index
+          </span>
+          <span className="font-mono text-xs text-muted">v1.0 · INR</span>
         </div>
-        {/* Decorative gradient orbs */}
-        <div className="absolute -top-20 -right-20 w-60 h-60 bg-brand-accent/20 rounded-full blur-3xl" />
-        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-brand-teal/10 rounded-full blur-3xl" />
-      </motion.div>
 
-      {/* Calculator Index Search Bar */}
-      <div className="relative max-w-lg mx-auto">
-        <div className="relative">
-          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search calculators (e.g. DCF, SIP, Tax)..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-10 py-3 rounded-2xl border border-surface-border dark:border-surface-dark-border
-                       bg-white dark:bg-surface-dark-secondary text-gray-900 dark:text-gray-100
-                       focus:outline-none focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent
-                       shadow-md shadow-black/[0.02] dark:shadow-black/[0.1] transition-all"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-            >
-              <X size={16} />
-            </button>
-          )}
+        <div className="px-sp-6 lg:px-sp-9 py-sp-9 lg:py-sp-9 space-y-sp-6">
+          <span className="mono-label !text-accent">// INDIA EDITION</span>
+          <h1 className="text-3xl lg:text-4xl font-display font-semibold tracking-tight max-w-3xl">
+            Stock valuation &amp;<br />
+            <span className="text-accent">investment toolkit.</span>
+          </h1>
+          <p className="text-base text-muted max-w-2xl">
+            Thirty professional-grade calculators for Indian retail investors. DCF, Graham, Piotroski,
+            SIP, XIRR and more — with ₹ lakh / crore formatting throughout.
+          </p>
+          <div className="flex flex-wrap gap-x-sp-9 gap-y-sp-3 pt-sp-6 border-t border-surface-border font-mono text-xs text-muted">
+            <span>30 CALCULATORS</span>
+            <span>04 MODULES</span>
+            <span>NSE · BSE</span>
+            <span>₹ LAKH / CRORE</span>
+          </div>
         </div>
+      </motion.section>
+
+      {/* Index search */}
+      <div className="relative max-w-xl">
+        <Search size={16} className="absolute left-sp-6 top-1/2 -translate-y-1/2 text-muted" />
+        <input
+          type="text"
+          placeholder="Search calculators — DCF, SIP, tax..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label="Search calculators"
+          className="w-full h-12 pl-sp-9 pr-sp-9 rounded-sm bg-surface border border-surface-border
+                     text-base placeholder:text-muted hover:border-muted/60
+                     focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/40
+                     transition-colors duration-150"
+        />
+        {searchQuery ? (
+          <button
+            onClick={() => setSearchQuery('')}
+            className="absolute right-sp-6 top-1/2 -translate-y-1/2 text-muted hover:text-accent transition-colors duration-150"
+            aria-label="Clear search"
+          >
+            <X size={16} />
+          </button>
+        ) : (
+          <kbd className="absolute right-sp-6 top-1/2 -translate-y-1/2 font-mono text-xs text-muted border border-surface-border rounded-sm px-sp-2 py-0.5">
+            /
+          </kbd>
+        )}
       </div>
 
-      {/* Recently Used (if any, hide when searching) */}
+      {/* Recently used */}
       {!searchQuery && recentlyUsed.length > 0 && (
         <section>
-          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-            <TrendingUp size={14} />
-            Recently Used
+          <h2 className="mono-label flex items-center gap-sp-3 mb-sp-5">
+            Recently used <span className="text-accent">[{recentlyUsed.length}]</span>
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-sp-5">
             {recentlyUsed.map((id) => {
               const calc = CALCULATORS[id];
               if (!calc) return null;
@@ -99,10 +111,10 @@ export default function Dashboard() {
                 <Link
                   key={id}
                   to={`/calculator/${id}`}
-                  className="glass-card p-3.5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group"
+                  className="panel p-sp-5 hover:border-accent/50 transition-colors duration-150 group"
                 >
-                  <Icon size={18} className="text-brand-accent mb-2 group-hover:scale-110 transition-transform" />
-                  <p className="text-xs font-semibold truncate">{calc.name}</p>
+                  <Icon size={16} className="text-accent mb-sp-3" strokeWidth={1.75} />
+                  <p className="text-sm font-medium truncate">{calc.name}</p>
                 </Link>
               );
             })}
@@ -110,55 +122,56 @@ export default function Dashboard() {
         </section>
       )}
 
-      {/* Calculator Categories */}
+      {/* Calculator modules */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="space-y-6"
-        key={searchQuery} // Forces re-animation when search changes
+        className="space-y-sp-9"
+        key={searchQuery}
       >
         {filteredCategories.length > 0 ? (
           filteredCategories.map((category) => {
             const CatIcon = category.icon;
             return (
               <motion.section key={category.id} variants={itemVariants}>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-9 h-9 rounded-xl ${category.bgColor} flex items-center justify-center`}>
-                    <CatIcon size={18} className={category.color} />
+                <div className="flex items-start justify-between gap-sp-6 mb-sp-5">
+                  <div className="flex items-center gap-sp-5">
+                    <div className={`w-9 h-9 rounded-sm ${category.bgColor} flex items-center justify-center shrink-0`}>
+                      <CatIcon size={17} strokeWidth={1.75} className={category.color} />
+                    </div>
+                    <div>
+                      <h2 className="text-base font-semibold">{category.name}</h2>
+                      <p className="text-sm text-muted">{category.description}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-base font-bold text-gray-900 dark:text-white">{category.name}</h2>
-                    <p className="text-xs text-gray-500">{category.description}</p>
-                  </div>
+                  <span className="font-mono text-xs text-muted shrink-0 pt-sp-2">
+                    {String(category.calculators.length).padStart(2, '0')}
+                  </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-sp-5">
                   {category.calculators.map((calc) => {
                     const Icon = calc.icon;
                     return (
                       <Link
                         key={calc.id}
                         to={`/calculator/${calc.id}`}
-                        className="glass-card p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group flex items-start gap-3"
+                        className="panel p-sp-6 hover:border-accent/50 transition-colors duration-150 group flex items-start gap-sp-5"
                       >
-                        <div className={`w-9 h-9 rounded-lg ${category.bgColor} flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform`}>
-                          <Icon size={16} className={category.color} />
+                        <div className={`w-9 h-9 rounded-sm ${category.bgColor} flex items-center justify-center shrink-0`}>
+                          <Icon size={16} strokeWidth={1.75} className={category.color} />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-1.5 justify-between">
-                            <h3 className="text-sm font-semibold truncate pr-1">{calc.name}</h3>
-                            <div className="flex gap-0.5 shrink-0">
-                              {[...Array(calc.popularity)].map((_, i) => (
-                                <span key={i} className="text-amber-400 text-[8px]">★</span>
-                              ))}
-                            </div>
+                          <h3 className="text-sm font-semibold truncate pr-sp-2">{calc.name}</h3>
+                          <p className="text-sm text-muted mt-sp-1 truncate">{calc.description}</p>
+                          <div className="flex gap-sp-1 mt-sp-3">
+                            {[...Array(calc.popularity)].map((_, i) => (
+                              <span key={i} className="w-sp-2 h-sp-2 rounded-sm bg-accent/70" />
+                            ))}
                           </div>
-                          <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">
-                            {calc.description}
-                          </p>
                         </div>
-                        <ArrowRight size={14} className="opacity-0 group-hover:opacity-60 transition-opacity shrink-0 mt-1" />
+                        <ArrowRight size={14} className="text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-150 shrink-0 mt-sp-1" />
                       </Link>
                     );
                   })}
@@ -167,9 +180,9 @@ export default function Dashboard() {
             );
           })
         ) : (
-          <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-            <p className="text-lg font-medium">No calculators matching "{searchQuery}"</p>
-            <p className="text-xs mt-1">Try another search keyword</p>
+          <div className="panel p-sp-9">
+            <p className="font-mono text-sm text-accent">// no results for “{searchQuery}”</p>
+            <p className="text-sm text-muted mt-sp-3">Try another keyword. {totalResults} tools are indexed.</p>
           </div>
         )}
       </motion.div>

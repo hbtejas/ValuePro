@@ -3,7 +3,7 @@ import { LayoutDashboard, Calculator, Search, Clock, User } from 'lucide-react';
 
 const tabs = [
   { to: '/', icon: LayoutDashboard, label: 'Home' },
-  { to: '/calculators', icon: Calculator, label: 'Calculate' },
+  { to: '/calculators', icon: Calculator, label: 'Tools' },
   { to: '/screener', icon: Search, label: 'Screener' },
   { to: '/history', icon: Clock, label: 'History' },
   { to: '/login', icon: User, label: 'Profile' },
@@ -11,10 +11,11 @@ const tabs = [
 
 export default function MobileNav() {
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 dark:bg-surface-dark-primary/95 
-                     backdrop-blur-xl border-t border-surface-border dark:border-surface-dark-border"
-         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
-      <div className="flex items-center justify-around h-16 px-2">
+    <nav
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-canvas/95 backdrop-blur border-t border-surface-border"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+    >
+      <div className="flex items-center justify-around h-16 px-sp-3">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
@@ -23,16 +24,15 @@ export default function MobileNav() {
               to={tab.to}
               end={tab.to === '/'}
               className={({ isActive }) =>
-                `flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-colors
-                 ${isActive 
-                   ? 'text-brand-accent' 
-                   : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}`
+                `flex flex-col items-center justify-center gap-sp-1 px-sp-5 py-sp-2 border-t-2 border-transparent
+                 transition-colors duration-150
+                 ${isActive ? 'border-accent text-accent' : 'text-muted hover:text-ink'}`
               }
             >
               {({ isActive }) => (
                 <>
-                  <Icon size={20} strokeWidth={isActive ? 2.5 : 1.5} />
-                  <span className={`text-[10px] ${isActive ? 'font-bold' : 'font-medium'}`}>{tab.label}</span>
+                  <Icon size={18} strokeWidth={isActive ? 2 : 1.5} />
+                  <span className="font-mono text-xs uppercase tracking-wider">{tab.label}</span>
                 </>
               )}
             </NavLink>

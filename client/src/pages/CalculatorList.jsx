@@ -7,72 +7,84 @@ import { CALCULATOR_CATEGORIES } from '../utils/calculatorData';
 export default function CalculatorList() {
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Filter categories and calculators based on search query
-  const filteredCategories = CALCULATOR_CATEGORIES.map((category) => {
-    const matchingCalcs = category.calculators.filter(
+  const filteredCategories = CALCULATOR_CATEGORIES.map((category) => ({
+    ...category,
+    calculators: category.calculators.filter(
       (calc) =>
         calc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         calc.description.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    return { ...category, calculators: matchingCalcs };
-  }).filter((category) => category.calculators.length > 0);
+    ),
+  })).filter((category) => category.calculators.length > 0);
+
+  const total = filteredCategories.reduce((sum, c) => sum + c.calculators.length, 0);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h1 className="text-2xl font-display font-bold">All Calculators</h1>
-        
-        {/* Search Bar */}
-        <div className="relative w-full md:max-w-xs">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search all calculators..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-8 py-2 rounded-xl border border-surface-border dark:border-surface-dark-border
-                       bg-white dark:bg-surface-dark-secondary text-sm placeholder-gray-400
-                       focus:outline-none focus:ring-2 focus:ring-brand-accent/40"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-            >
-              <X size={14} />
-            </button>
-          )}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-sp-9">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-sp-6">
+        <div>
+          <span className="mono-label !text-accent">// INDEX</span>
+          <h1 className="text-2xl font-display font-semibold mt-sp-3">All calculators</h1>
         </div>
+        <span className="font-mono text-xs text-muted">{String(total).padStart(2, '0')} TOOLS</span>
+      </div>
+
+      <div className="relative max-w-md">
+        <Search size={16} className="absolute left-sp-6 top-1/2 -translate-y-1/2 text-muted" />
+        <input
+          type="text"
+          placeholder="Filter the index..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label="Filter calculators"
+          className="w-full h-11 pl-sp-9 pr-sp-9 rounded-sm bg-surface border border-surface-border
+                     text-base placeholder:text-muted hover:border-muted/60
+                     focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/40
+                     transition-colors duration-150"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery('')}
+            className="absolute right-sp-6 top-1/2 -translate-y-1/2 text-muted hover:text-accent transition-colors duration-150"
+            aria-label="Clear filter"
+          >
+            <X size={16} />
+          </button>
+        )}
       </div>
 
       {filteredCategories.length > 0 ? (
         filteredCategories.map((category) => {
           const CatIcon = category.icon;
           return (
-            <section key={category.id} className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className={`w-9 h-9 rounded-xl ${category.bgColor} flex items-center justify-center`}>
-                  <CatIcon size={18} className={category.color} />
+            <section key={category.id} className="space-y-sp-5">
+              <div className="flex items-center gap-sp-5">
+                <div className={`w-9 h-9 rounded-sm ${category.bgColor} flex items-center justify-center shrink-0`}>
+                  <CatIcon size={17} strokeWidth={1.75} className={category.color} />
                 </div>
-                <h2 className="text-lg font-bold">{category.name}</h2>
+                <h2 className="text-base font-semibold">{category.name}</h2>
+                <span className="font-mono text-xs text-muted">{String(category.calculators.length).padStart(2, '0')}</span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {category.calculators.map((calc) => {
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-sp-5">
+                {category.calculators.map((calc, index) => {
                   const Icon = calc.icon;
                   return (
                     <Link
                       key={calc.id}
                       to={`/calculator/${calc.id}`}
-                      className="glass-card p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all group flex gap-3"
+                      className="panel p-sp-6 hover:border-accent/50 transition-colors duration-150 group flex gap-sp-5"
                     >
-                      <div className={`w-10 h-10 rounded-xl ${category.bgColor} flex items-center justify-center shrink-0`}>
-                        <Icon size={18} className={category.color} />
+                      <span className="font-mono text-xs text-muted w-6 shrink-0 pt-sp-1">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <div className={`w-9 h-9 rounded-sm ${category.bgColor} flex items-center justify-center shrink-0`}>
+                        <Icon size={16} strokeWidth={1.75} className={category.color} />
                       </div>
                       <div className="min-w-0 flex-1">
                         <h3 className="text-sm font-semibold truncate">{calc.name}</h3>
-                        <p className="text-[11px] text-gray-500 mt-0.5 line-clamp-2">{calc.description}</p>
+                        <p className="text-sm text-muted mt-sp-1 line-clamp-2">{calc.description}</p>
                       </div>
-                      <ArrowRight size={14} className="opacity-0 group-hover:opacity-60 transition-opacity shrink-0 mt-1" />
+                      <ArrowRight size={14} className="text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-150 shrink-0 mt-sp-1" />
                     </Link>
                   );
                 })}
@@ -81,8 +93,8 @@ export default function CalculatorList() {
           );
         })
       ) : (
-        <div className="text-center py-12 text-gray-400">
-          <p>No calculators match "{searchQuery}"</p>
+        <div className="panel p-sp-9">
+          <p className="font-mono text-sm text-accent">// no tools match “{searchQuery}”</p>
         </div>
       )}
     </motion.div>

@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const getStoredTheme = () => {
   const stored = localStorage.getItem('valuepro_theme');
   if (stored) return stored;
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return 'dark';
 };
 
 const themeSlice = createSlice({

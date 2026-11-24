@@ -60,11 +60,11 @@ export default function DRIPCalculator() {
               <h3 className="text-sm font-semibold mb-4">Portfolio Growth</h3>
               <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={result.data}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--bc-border))" />
                   <XAxis dataKey="year" tick={{ fontSize: 10 }} />
                   <YAxis tick={{ fontSize: 10 }} />
                   <Tooltip formatter={(v) => [formatINR(v), '']} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                  <Line type="monotone" dataKey="value" stroke="#16A34A" strokeWidth={2} dot={{ fill: '#16A34A', r: 3 }} />
+                  <Line type="monotone" dataKey="value" stroke="#10B981" strokeWidth={2} dot={{ fill: '#10B981', r: 3 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

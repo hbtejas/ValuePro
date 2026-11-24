@@ -8,7 +8,7 @@ import { formatINR, formatPercent } from '../../utils/formatters';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { Plus, Trash2, AlertTriangle } from 'lucide-react';
 
-const COLORS = ['#E97B2C', '#0D9488', '#0B1F3A', '#16A34A', '#DC2626', '#D97706', '#8B5CF6', '#EC4899', '#06B6D4', '#F59E0B'];
+const COLORS = ['#F97316', '#10B981', '#F59E0B'];
 
 export default function PortfolioAllocationCalculator() {
   const dispatch = useDispatch();

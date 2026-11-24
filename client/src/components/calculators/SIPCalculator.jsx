@@ -66,13 +66,13 @@ export default function SIPCalculator() {
               <h3 className="text-sm font-semibold mb-4">Invested vs Gains Over Time</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={result.yearly}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--bc-border))" />
                   <XAxis dataKey="year" tick={{ fontSize: 10 }} />
                   <YAxis tick={{ fontSize: 10 }} />
                   <Tooltip formatter={(v) => [formatINR(v), '']} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
                   <Legend />
-                  <Bar dataKey="invested" stackId="a" fill="#0B1F3A" name="Invested" radius={[0, 0, 0, 0]} />
-                  <Bar dataKey="gains" stackId="a" fill="#16A34A" name="Gains" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="invested" stackId="a" fill="#F59E0B" name="Invested" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="gains" stackId="a" fill="#10B981" name="Gains" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

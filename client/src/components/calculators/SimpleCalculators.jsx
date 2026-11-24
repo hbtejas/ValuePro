@@ -154,7 +154,7 @@ export function PriceToBookCalculator() {
         {result && (
           <>
             <ResultCard label="P/B Ratio" value={`${result.pb}x`} large color={result.pb < 1 ? 'green' : result.pb < 3 ? 'amber' : 'red'} />
-            <div className="glass-card p-3 text-xs text-blue-600 dark:text-blue-400 bg-blue-500/5">
+            <div className="glass-card p-3 text-xs text-accent bg-accent/5">
               🏦 P/B is especially relevant for banks, NBFCs, and financial companies where book value closely reflects asset value.
             </div>
           </>

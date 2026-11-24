@@ -13,8 +13,8 @@ export const CALCULATOR_CATEGORIES = [
     name: 'Value Investing',
     description: 'Estimate intrinsic value, margin of safety, and business health quality',
     icon: TrendingUp,
-    color: 'text-emerald-500',
-    bgColor: 'bg-emerald-500/10',
+    color: 'text-accent',
+    bgColor: 'bg-accent/10',
     calculators: [
       { id: 'intrinsic-value', name: 'Intrinsic Value', description: 'Graham, Lynch, EPV & DCF methods', icon: Calculator, popularity: 5 },
       { id: 'margin-of-safety', name: 'Margin of Safety', description: 'Is the stock undervalued?', icon: Shield, popularity: 5 },
@@ -35,8 +35,8 @@ export const CALCULATOR_CATEGORIES = [
     name: 'SIP / Retirement',
     description: 'Plan your long-term wealth accumulation and retirement corpus',
     icon: Clock,
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
+    color: 'text-positive',
+    bgColor: 'bg-positive/10',
     calculators: [
       { id: 'sip', name: 'SIP Calculator', description: 'Systematic Investment Plan returns', icon: Wallet, popularity: 5 },
       { id: 'lump-sum', name: 'Lump Sum', description: 'One-time investment growth', icon: Banknote, popularity: 4 },
@@ -52,8 +52,8 @@ export const CALCULATOR_CATEGORIES = [
     name: 'Technical & Returns',
     description: 'Track investment growth, cash flows, and key financial ratios',
     icon: Activity,
-    color: 'text-violet-500',
-    bgColor: 'bg-violet-500/10',
+    color: 'text-warning',
+    bgColor: 'bg-warning/10',
     calculators: [
       { id: 'cagr', name: 'CAGR', description: 'Compound Annual Growth Rate', icon: TrendingUp, popularity: 5 },
       { id: 'xirr', name: 'XIRR', description: 'Returns on irregular cashflows', icon: GitBranch, popularity: 4 },
@@ -73,8 +73,8 @@ export const CALCULATOR_CATEGORIES = [
     name: 'Tax & Other',
     description: 'Indian income tax planning and compliance calculators',
     icon: Landmark,
-    color: 'text-amber-500',
-    bgColor: 'bg-amber-500/10',
+    color: 'text-muted',
+    bgColor: 'bg-surface-secondary',
     calculators: [
       { id: 'income-tax', name: 'Income Tax', description: 'Old vs New Regime tax calculator FY 2024-25', icon: Landmark, popularity: 5 },
     ],

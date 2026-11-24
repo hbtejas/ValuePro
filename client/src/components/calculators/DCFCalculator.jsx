@@ -112,12 +112,12 @@ export default function DCFCalculator() {
               <h3 className="text-sm font-semibold mb-4">Projected FCF (₹ Cr)</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={result.projectedFCF}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--tw-border-opacity, #E2E8F0)" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--bc-border))" />
                   <XAxis dataKey="year" tick={{ fontSize: 11 }} />
                   <YAxis tick={{ fontSize: 11 }} />
                   <Tooltip formatter={(v) => [`₹${v.toLocaleString('en-IN')}`, '']} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                  <Bar dataKey="fcf" fill="#E97B2C" radius={[6, 6, 0, 0]} name="FCF" />
-                  <Bar dataKey="pvFCF" fill="#0D9488" radius={[6, 6, 0, 0]} name="PV of FCF" />
+                  <Bar dataKey="fcf" fill="#F97316" radius={[4, 4, 0, 0]} name="FCF" />
+                  <Bar dataKey="pvFCF" fill="#10B981" radius={[4, 4, 0, 0]} name="PV of FCF" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
