@@ -71,8 +71,10 @@ export default function Landing() {
 
       <main>
         {/* Hero */}
-        <section className="border-b border-surface-border">
-          <div className="max-w-7xl mx-auto px-sp-6 lg:px-sp-8 py-sp-9 lg:py-9 grid lg:grid-cols-2 gap-sp-9 items-center">
+        <section className="relative overflow-hidden border-b border-surface-border">
+          <div className="pointer-events-none absolute inset-0 console-grid grid-fade opacity-50" aria-hidden="true" />
+          <div className="pointer-events-none absolute -top-32 right-0 w-96 h-96 accent-glow rounded-full opacity-40" aria-hidden="true" />
+          <div className="relative max-w-7xl mx-auto px-sp-6 lg:px-sp-8 py-sp-9 lg:py-9 grid lg:grid-cols-2 gap-sp-9 items-center">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -81,7 +83,11 @@ export default function Landing() {
             >
               <span className="mono-label !text-accent">// VALUEPRO INDIA · v1.0</span>
               <h1 className="text-3xl lg:text-4xl font-display font-semibold tracking-tight">
-                Valuation tools for the <span className="text-accent">Indian investor.</span>
+                Valuation tools for the{' '}
+                <span className="relative text-accent">
+                  Indian investor.
+                  <span className="absolute left-0 -bottom-1 h-px w-full bg-accent/40" />
+                </span>
               </h1>
               <p className="text-base text-muted max-w-xl">
                 Thirty calculators for stocks, portfolios and long-term plans. Graham, DCF, SIP,
@@ -105,7 +111,7 @@ export default function Landing() {
             </motion.div>
 
             {/* Console preview */}
-            <div className="panel shadow-xl">
+            <div className="panel shadow-xl accent-glow">
               <div className="flex items-center justify-between px-sp-6 py-sp-3 bg-surface-secondary border-b border-surface-border">
                 <span className="flex items-center gap-sp-3 font-mono text-xs text-muted">
                   <Terminal size={13} className="text-accent" /> valuation.run
@@ -131,6 +137,22 @@ export default function Landing() {
                     <div className="h-full w-full bg-accent rounded-pill" />
                   </div>
                 </div>
+                <div className="border-t border-surface-border pt-sp-5 space-y-sp-3">
+                  <span className="mono-label">Cashflow trend</span>
+                  <div className="flex items-end gap-sp-1 h-12" aria-hidden="true">
+                    {[42, 58, 36, 72, 51, 84, 66, 95, 74, 100].map((height, i) => (
+                      <div
+                        key={i}
+                        className="flex-1 rounded-sm"
+                        style={{
+                          height: `${height}%`,
+                          backgroundColor: i > 6 ? '#10B981' : i > 3 ? '#F59E0B' : '#F97316',
+                          opacity: 0.4 + i * 0.05,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
                 <p className="text-muted">
                   <span className="text-positive">✓</span> undervalued <span className="text-muted">· 7 models compared</span>
                 </p>
@@ -154,7 +176,7 @@ export default function Landing() {
         {/* Capabilities */}
         <section id="features" className="max-w-7xl mx-auto px-sp-6 lg:px-sp-8 py-sp-9 space-y-sp-9 scroll-mt-20">
           <div className="max-w-2xl space-y-sp-3">
-            <span className="mono-label !text-accent">// CAPABILITIES</span>
+            <div className="section-rule"><span className="mono-label !text-accent">// CAPABILITIES</span></div>
             <h2 className="text-2xl font-display font-semibold">Everything you need to size up a stock.</h2>
             <p className="text-base text-muted">
               Each tool exposes its assumptions, shows the working, and keeps financial figures in a
@@ -166,7 +188,7 @@ export default function Landing() {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div key={feature.title} className="panel p-sp-6 space-y-sp-5 hover:border-accent/50 transition-colors duration-150">
+                <div key={feature.title} className="panel p-sp-6 space-y-sp-5 hover:border-accent/50 hover:-translate-y-px hover:shadow-lg transition-all duration-150">
                   <div className="flex items-center justify-between">
                     <div className="w-9 h-9 rounded-sm bg-accent/10 flex items-center justify-center">
                       <Icon size={17} strokeWidth={1.75} className="text-accent" />
@@ -186,7 +208,7 @@ export default function Landing() {
           <div className="max-w-7xl mx-auto px-sp-6 lg:px-sp-8 py-sp-9 space-y-sp-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-sp-6">
               <div className="space-y-sp-3">
-                <span className="mono-label !text-accent">// TOOL INDEX</span>
+                <div className="section-rule"><span className="mono-label !text-accent">// TOOL INDEX</span></div>
                 <h2 className="text-2xl font-display font-semibold">Four modules. Thirty calculators.</h2>
               </div>
               <Link to="/calculators" className="btn-secondary self-start md:self-auto">
@@ -232,7 +254,7 @@ export default function Landing() {
         {/* Workflow */}
         <section id="workflow" className="max-w-7xl mx-auto px-sp-6 lg:px-sp-8 py-sp-9 space-y-sp-8 scroll-mt-20">
           <div className="space-y-sp-3">
-            <span className="mono-label !text-accent">// WORKFLOW</span>
+            <div className="section-rule"><span className="mono-label !text-accent">// WORKFLOW</span></div>
             <h2 className="text-2xl font-display font-semibold">From inputs to insight in three steps.</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-sp-5">
@@ -248,7 +270,7 @@ export default function Landing() {
 
         {/* CTA */}
         <section className="max-w-7xl mx-auto px-sp-6 lg:px-sp-8 pb-sp-9">
-          <div className="panel p-sp-9 flex flex-col lg:flex-row items-start justify-between gap-sp-8">
+          <div className="panel accent-glow p-sp-9 border-t-2 border-t-accent flex flex-col lg:flex-row items-start justify-between gap-sp-8">
             <div className="space-y-sp-5 max-w-2xl">
               <span className="mono-label !text-accent">// GET STARTED</span>
               <h2 className="text-3xl font-display font-semibold tracking-tight">Start with a number.</h2>

@@ -11,8 +11,15 @@ export default function ResultCard({ label, value, subValue, color, tooltip, lar
     color === 'amber' ? 'text-warning' :
     'text-ink';
 
+  const accentLine =
+    color === 'green' ? 'bg-positive' :
+    color === 'red' ? 'bg-accent' :
+    color === 'amber' ? 'bg-warning' :
+    '';
+
   return (
-    <div className={`panel p-sp-6 hover:border-accent/40 transition-colors duration-150 ${className}`}>
+    <div className={`panel relative overflow-hidden p-sp-6 hover:border-accent/40 transition-colors duration-150 ${className}`}>
+      {accentLine && <div className={`absolute top-0 left-0 right-0 h-px ${accentLine}`} />}
       <div className="flex items-start justify-between gap-sp-3 mb-sp-5">
         <span className="mono-label">{label}</span>
         {tooltip && (

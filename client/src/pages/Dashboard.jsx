@@ -38,9 +38,10 @@ export default function Dashboard() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1], delay: 0.12 }}
-        className="panel overflow-hidden"
+        className="panel relative overflow-hidden"
       >
-        <div className="flex items-center justify-between px-sp-6 py-sp-3 bg-surface-secondary border-b border-surface-border">
+        <div className="pointer-events-none absolute inset-0 console-grid grid-fade opacity-40" aria-hidden="true" />
+        <div className="relative flex items-center justify-between px-sp-6 py-sp-3 bg-surface-secondary border-b border-surface-border">
           <span className="font-mono text-xs text-muted flex items-center gap-sp-3">
             <span className="w-sp-2 h-sp-2 rounded-full bg-accent" />
             valuepro / index
@@ -48,21 +49,45 @@ export default function Dashboard() {
           <span className="font-mono text-xs text-muted">v1.0 · INR</span>
         </div>
 
-        <div className="px-sp-6 lg:px-sp-9 py-sp-9 lg:py-sp-9 space-y-sp-6">
-          <span className="mono-label !text-accent">// INDIA EDITION</span>
-          <h1 className="text-3xl lg:text-4xl font-display font-semibold tracking-tight max-w-3xl">
-            Stock valuation &amp;<br />
-            <span className="text-accent">investment toolkit.</span>
-          </h1>
-          <p className="text-base text-muted max-w-2xl">
-            Thirty professional-grade calculators for Indian retail investors. DCF, Graham, Piotroski,
-            SIP, XIRR and more — with ₹ lakh / crore formatting throughout.
-          </p>
-          <div className="flex flex-wrap gap-x-sp-9 gap-y-sp-3 pt-sp-6 border-t border-surface-border font-mono text-xs text-muted">
-            <span>30 CALCULATORS</span>
-            <span>04 MODULES</span>
-            <span>NSE · BSE</span>
-            <span>₹ LAKH / CRORE</span>
+        <div className="relative px-sp-6 lg:px-sp-9 py-sp-9 lg:py-sp-9 grid lg:grid-cols-[1fr_auto] gap-sp-9 items-end">
+          <div className="space-y-sp-6">
+            <div className="section-rule"><span className="mono-label !text-accent">// INDIA EDITION</span></div>
+            <h1 className="text-3xl lg:text-4xl font-display font-semibold tracking-tight max-w-3xl">
+              Stock valuation &amp;<br />
+              <span className="relative text-accent">
+                investment toolkit.
+                <span className="absolute left-0 -bottom-1 h-px w-full bg-accent/40" />
+              </span>
+            </h1>
+            <p className="text-base text-muted max-w-2xl">
+              Thirty professional-grade calculators for Indian retail investors. DCF, Graham, Piotroski,
+              SIP, XIRR and more — with ₹ lakh / crore formatting throughout.
+            </p>
+            <div className="flex flex-wrap gap-x-sp-9 gap-y-sp-3 pt-sp-6 border-t border-surface-border font-mono text-xs text-muted">
+              <span>30 CALCULATORS</span>
+              <span>04 MODULES</span>
+              <span>NSE · BSE</span>
+              <span>₹ LAKH / CRORE</span>
+            </div>
+          </div>
+
+          <div className="hidden lg:block w-64 panel bg-canvas/70 p-sp-6 space-y-sp-5 accent-glow">
+            <span className="mono-label">// model spread</span>
+            {[
+              { label: 'GRAHAM', value: 78, tone: 'bg-accent' },
+              { label: 'DCF', value: 92, tone: 'bg-positive' },
+              { label: 'EPV', value: 64, tone: 'bg-warning' },
+            ].map((model) => (
+              <div key={model.label} className="space-y-sp-3">
+                <div className="flex justify-between font-mono text-xs">
+                  <span className="text-muted">{model.label}</span>
+                  <span className="text-ink">{model.value}</span>
+                </div>
+                <div className="h-sp-2 bg-surface-secondary rounded-pill overflow-hidden">
+                  <div className={`h-full rounded-pill ${model.tone}`} style={{ width: `${model.value}%` }} />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </motion.section>
@@ -112,7 +137,7 @@ export default function Dashboard() {
                 <Link
                   key={id}
                   to={`/calculator/${id}`}
-                  className="panel p-sp-5 hover:border-accent/50 transition-colors duration-150 group"
+                  className="panel p-sp-5 hover:border-accent/50 hover:-translate-y-px hover:shadow-lg transition-all duration-150 group"
                 >
                   <Icon size={16} className="text-accent mb-sp-3" strokeWidth={1.75} />
                   <p className="text-sm font-medium truncate">{calc.name}</p>
@@ -158,7 +183,7 @@ export default function Dashboard() {
                       <Link
                         key={calc.id}
                         to={`/calculator/${calc.id}`}
-                        className="panel p-sp-6 hover:border-accent/50 transition-colors duration-150 group flex items-start gap-sp-5"
+                        className="panel p-sp-6 hover:border-accent/50 hover:-translate-y-px hover:shadow-lg transition-all duration-150 group flex items-start gap-sp-5"
                       >
                         <div className={`w-9 h-9 rounded-sm ${category.bgColor} flex items-center justify-center shrink-0`}>
                           <Icon size={16} strokeWidth={1.75} className={category.color} />

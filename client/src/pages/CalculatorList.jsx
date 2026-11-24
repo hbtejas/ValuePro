@@ -72,7 +72,7 @@ export default function CalculatorList() {
                     <Link
                       key={calc.id}
                       to={`/calculator/${calc.id}`}
-                      className="panel p-sp-6 hover:border-accent/50 transition-colors duration-150 group flex gap-sp-5"
+                      className="panel p-sp-6 hover:border-accent/50 hover:-translate-y-px hover:shadow-lg transition-all duration-150 group flex gap-sp-5"
                     >
                       <span className="font-mono text-xs text-muted w-6 shrink-0 pt-sp-1">
                         {String(index + 1).padStart(2, '0')}
