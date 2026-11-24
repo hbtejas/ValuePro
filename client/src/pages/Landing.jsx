@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Check, TrendingUp, Target, PieChart, Terminal, ShieldCheck } from 'lucide-react';
 import { CALCULATOR_CATEGORIES } from '../utils/calculatorData';
+import TiltCard from '../components/common/TiltCard';
 
 const stats = [
   { value: '30', label: 'CALCULATORS' },
@@ -111,7 +112,15 @@ export default function Landing() {
             </motion.div>
 
             {/* Console preview */}
-            <div className="panel shadow-xl accent-glow">
+            <div className="relative perspective">
+              <div className="pointer-events-none absolute -top-6 -left-6 z-10 panel px-sp-5 py-sp-3 float-a preserve-3d" aria-hidden="true">
+                <span className="font-mono text-xs text-accent">+20.5% MOS</span>
+              </div>
+              <div className="pointer-events-none absolute -right-5 bottom-10 z-10 panel px-sp-5 py-sp-3 float-b preserve-3d" aria-hidden="true">
+                <span className="font-mono text-xs text-positive">DCF ✓</span>
+              </div>
+              <TiltCard intensity={6}>
+                <div className="panel preserve-3d shadow-xl accent-glow">
               <div className="flex items-center justify-between px-sp-6 py-sp-3 bg-surface-secondary border-b border-surface-border">
                 <span className="flex items-center gap-sp-3 font-mono text-xs text-muted">
                   <Terminal size={13} className="text-accent" /> valuation.run
@@ -141,13 +150,15 @@ export default function Landing() {
                   <span className="mono-label">Cashflow trend</span>
                   <div className="flex items-end gap-sp-1 h-12" aria-hidden="true">
                     {[42, 58, 36, 72, 51, 84, 66, 95, 74, 100].map((height, i) => (
-                      <div
+                      <motion.div
                         key={i}
-                        className="flex-1 rounded-sm"
+                        className="flex-1 rounded-sm origin-bottom"
+                        initial={{ scaleY: 0, opacity: 0 }}
+                        animate={{ scaleY: 1, opacity: 0.4 + i * 0.05 }}
+                        transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1], delay: 0.2 + i * 0.05 }}
                         style={{
                           height: `${height}%`,
                           backgroundColor: i > 6 ? '#10B981' : i > 3 ? '#F59E0B' : '#F97316',
-                          opacity: 0.4 + i * 0.05,
                         }}
                       />
                     ))}
@@ -156,7 +167,9 @@ export default function Landing() {
                 <p className="text-muted">
                   <span className="text-positive">✓</span> undervalued <span className="text-muted">· 7 models compared</span>
                 </p>
-              </div>
+                </div>
+                </div>
+              </TiltCard>
             </div>
           </div>
         </section>
@@ -188,16 +201,24 @@ export default function Landing() {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <div key={feature.title} className="panel p-sp-6 space-y-sp-5 hover:border-accent/50 hover:-translate-y-px hover:shadow-lg transition-all duration-150">
-                  <div className="flex items-center justify-between">
-                    <div className="w-9 h-9 rounded-sm bg-accent/10 flex items-center justify-center">
-                      <Icon size={17} strokeWidth={1.75} className="text-accent" />
+                <TiltCard key={feature.title} intensity={7}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1], delay: index * 0.08 }}
+                    className="panel preserve-3d h-full p-sp-6 space-y-sp-5 hover:border-accent/50 hover:shadow-lg transition-colors duration-150"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="w-9 h-9 rounded-sm bg-accent/10 flex items-center justify-center depth-layer">
+                        <Icon size={17} strokeWidth={1.75} className="text-accent" />
+                      </div>
+                      <span className="font-mono text-xs text-muted">{String(index + 1).padStart(2, '0')}</span>
                     </div>
-                    <span className="font-mono text-xs text-muted">{String(index + 1).padStart(2, '0')}</span>
-                  </div>
-                  <h3 className="text-base font-semibold">{feature.title}</h3>
-                  <p className="text-sm text-muted leading-relaxed">{feature.text}</p>
-                </div>
+                    <h3 className="text-base font-semibold">{feature.title}</h3>
+                    <p className="text-sm text-muted leading-relaxed">{feature.text}</p>
+                  </motion.div>
+                </TiltCard>
               );
             })}
           </div>
@@ -217,10 +238,17 @@ export default function Landing() {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-sp-5">
-              {CALCULATOR_CATEGORIES.map((category) => {
+              {CALCULATOR_CATEGORIES.map((category, index) => {
                 const Icon = category.icon;
                 return (
-                  <div key={category.id} className="panel flex flex-col">
+                  <TiltCard key={category.id} intensity={6}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1], delay: index * 0.08 }}
+                      className="panel preserve-3d flex flex-col h-full hover:border-accent/50 hover:shadow-lg transition-colors duration-150"
+                    >
                     <div className="p-sp-6 border-b border-surface-border space-y-sp-5 flex-1">
                       <div className={`w-9 h-9 rounded-sm ${category.bgColor} flex items-center justify-center`}>
                         <Icon size={17} strokeWidth={1.75} className={category.color} />
@@ -244,7 +272,8 @@ export default function Landing() {
                     >
                       Open module <ArrowRight size={14} />
                     </Link>
-                  </div>
+                    </motion.div>
+                  </TiltCard>
                 );
               })}
             </div>
@@ -259,18 +288,26 @@ export default function Landing() {
           </div>
           <div className="grid md:grid-cols-3 gap-sp-5">
             {steps.map((step, index) => (
-              <div key={step.title} className="panel p-sp-6 border-t-2 border-t-accent space-y-sp-5">
+              <motion.div
+                key={step.title}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1], delay: index * 0.08 }}
+                className="panel p-sp-6 border-t-2 border-t-accent space-y-sp-5"
+              >
                 <span className="font-mono text-xs text-accent">STEP {String(index + 1).padStart(2, '0')}</span>
                 <h3 className="text-base font-semibold">{step.title}</h3>
                 <p className="text-sm text-muted">{step.text}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </section>
 
         {/* CTA */}
         <section className="max-w-7xl mx-auto px-sp-6 lg:px-sp-8 pb-sp-9">
-          <div className="panel accent-glow p-sp-9 border-t-2 border-t-accent flex flex-col lg:flex-row items-start justify-between gap-sp-8">
+          <div className="panel relative accent-glow p-sp-9 border-t-2 border-t-accent flex flex-col lg:flex-row items-start justify-between gap-sp-8">
+            <span className="absolute right-sp-8 top-sp-8 hidden lg:block font-mono text-xs text-accent pulse-accent" aria-hidden="true">// READY</span>
             <div className="space-y-sp-5 max-w-2xl">
               <span className="mono-label !text-accent">// GET STARTED</span>
               <h2 className="text-3xl font-display font-semibold tracking-tight">Start with a number.</h2>

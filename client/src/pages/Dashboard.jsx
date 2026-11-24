@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Search, X } from 'lucide-react';
 import { CALCULATOR_CATEGORIES, CALCULATORS } from '../utils/calculatorData';
 import { selectMostUsed } from '../features/calculatorSlice';
+import TiltCard from '../components/common/TiltCard';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -84,7 +85,12 @@ export default function Dashboard() {
                   <span className="text-ink">{model.value}</span>
                 </div>
                 <div className="h-sp-2 bg-surface-secondary rounded-pill overflow-hidden">
-                  <div className={`h-full rounded-pill ${model.tone}`} style={{ width: `${model.value}%` }} />
+                  <motion.div
+                    className={`h-full rounded-pill ${model.tone}`}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${model.value}%` }}
+                    transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1], delay: 0.3 }}
+                  />
                 </div>
               </div>
             ))}
@@ -134,14 +140,15 @@ export default function Dashboard() {
               if (!calc) return null;
               const Icon = calc.icon;
               return (
-                <Link
-                  key={id}
-                  to={`/calculator/${id}`}
-                  className="panel p-sp-5 hover:border-accent/50 hover:-translate-y-px hover:shadow-lg transition-all duration-150 group"
-                >
-                  <Icon size={16} className="text-accent mb-sp-3" strokeWidth={1.75} />
-                  <p className="text-sm font-medium truncate">{calc.name}</p>
-                </Link>
+                <TiltCard key={id} className="h-full" intensity={9}>
+                  <Link
+                    to={`/calculator/${id}`}
+                    className="panel preserve-3d h-full p-sp-5 hover:border-accent/50 hover:shadow-lg transition-all duration-150 group"
+                  >
+                    <Icon size={16} className="text-accent mb-sp-3 depth-layer" strokeWidth={1.75} />
+                    <p className="text-sm font-medium truncate">{calc.name}</p>
+                  </Link>
+                </TiltCard>
               );
             })}
           </div>
@@ -180,25 +187,26 @@ export default function Dashboard() {
                   {category.calculators.map((calc) => {
                     const Icon = calc.icon;
                     return (
-                      <Link
-                        key={calc.id}
-                        to={`/calculator/${calc.id}`}
-                        className="panel p-sp-6 hover:border-accent/50 hover:-translate-y-px hover:shadow-lg transition-all duration-150 group flex items-start gap-sp-5"
-                      >
-                        <div className={`w-9 h-9 rounded-sm ${category.bgColor} flex items-center justify-center shrink-0`}>
-                          <Icon size={16} strokeWidth={1.75} className={category.color} />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h3 className="text-sm font-semibold truncate pr-sp-2">{calc.name}</h3>
-                          <p className="text-sm text-muted mt-sp-1 truncate">{calc.description}</p>
-                          <div className="flex gap-sp-1 mt-sp-3">
-                            {[...Array(calc.popularity)].map((_, i) => (
-                              <span key={i} className="w-sp-2 h-sp-2 rounded-sm bg-accent/70" />
-                            ))}
+                      <TiltCard key={calc.id} className="h-full" intensity={7}>
+                        <Link
+                          to={`/calculator/${calc.id}`}
+                          className="panel preserve-3d h-full p-sp-6 hover:border-accent/50 hover:shadow-lg transition-all duration-150 group flex items-start gap-sp-5"
+                        >
+                          <div className={`w-9 h-9 rounded-sm ${category.bgColor} flex items-center justify-center shrink-0 depth-layer`}>
+                            <Icon size={16} strokeWidth={1.75} className={category.color} />
                           </div>
-                        </div>
-                        <ArrowRight size={14} className="text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-150 shrink-0 mt-sp-1" />
-                      </Link>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="text-sm font-semibold truncate pr-sp-2">{calc.name}</h3>
+                            <p className="text-sm text-muted mt-sp-1 truncate">{calc.description}</p>
+                            <div className="flex gap-sp-1 mt-sp-3">
+                              {[...Array(calc.popularity)].map((_, i) => (
+                                <span key={i} className="w-sp-2 h-sp-2 rounded-sm bg-accent/70" />
+                              ))}
+                            </div>
+                          </div>
+                          <ArrowRight size={14} className="text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-150 shrink-0 mt-sp-1" />
+                        </Link>
+                      </TiltCard>
                     );
                   })}
                 </div>

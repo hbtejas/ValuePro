@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, X, ArrowRight } from 'lucide-react';
 import { CALCULATOR_CATEGORIES } from '../utils/calculatorData';
+import TiltCard from '../components/common/TiltCard';
 
 export default function CalculatorList() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -69,23 +70,24 @@ export default function CalculatorList() {
                 {category.calculators.map((calc, index) => {
                   const Icon = calc.icon;
                   return (
-                    <Link
-                      key={calc.id}
-                      to={`/calculator/${calc.id}`}
-                      className="panel p-sp-6 hover:border-accent/50 hover:-translate-y-px hover:shadow-lg transition-all duration-150 group flex gap-sp-5"
-                    >
-                      <span className="font-mono text-xs text-muted w-6 shrink-0 pt-sp-1">
-                        {String(index + 1).padStart(2, '0')}
-                      </span>
-                      <div className={`w-9 h-9 rounded-sm ${category.bgColor} flex items-center justify-center shrink-0`}>
-                        <Icon size={16} strokeWidth={1.75} className={category.color} />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="text-sm font-semibold truncate">{calc.name}</h3>
-                        <p className="text-sm text-muted mt-sp-1 line-clamp-2">{calc.description}</p>
-                      </div>
-                      <ArrowRight size={14} className="text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-150 shrink-0 mt-sp-1" />
-                    </Link>
+                    <TiltCard key={calc.id} className="h-full" intensity={7}>
+                      <Link
+                        to={`/calculator/${calc.id}`}
+                        className="panel preserve-3d h-full p-sp-6 hover:border-accent/50 hover:shadow-lg transition-all duration-150 group flex gap-sp-5"
+                      >
+                        <span className="font-mono text-xs text-muted w-6 shrink-0 pt-sp-1">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <div className={`w-9 h-9 rounded-sm ${category.bgColor} flex items-center justify-center shrink-0 depth-layer`}>
+                          <Icon size={16} strokeWidth={1.75} className={category.color} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-sm font-semibold truncate">{calc.name}</h3>
+                          <p className="text-sm text-muted mt-sp-1 line-clamp-2">{calc.description}</p>
+                        </div>
+                        <ArrowRight size={14} className="text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-150 shrink-0 mt-sp-1" />
+                      </Link>
+                    </TiltCard>
                   );
                 })}
               </div>
