@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, Calculator, Search, Clock, User } from 'lucide-react';
 
 const tabs = [
-  { to: '/', icon: LayoutDashboard, label: 'Home' },
+  { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/calculators', icon: Calculator, label: 'Tools' },
   { to: '/screener', icon: Search, label: 'Screener' },
   { to: '/history', icon: Clock, label: 'History' },

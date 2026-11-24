@@ -30,7 +30,7 @@ export default function Login() {
         : await authAPI.login({ email: form.email, password: form.password });
 
       dispatch(loginSuccess(res.data.data));
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       dispatch(loginFailure(err.response?.data?.message || 'Something went wrong'));
     }

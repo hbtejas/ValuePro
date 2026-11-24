@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Search, Clock, ChevronDown, ChevronRight, PanelLeftClose, PanelLeft } from 'lucide-react';
+import { Home, LayoutDashboard, Search, Clock, ChevronDown, ChevronRight, PanelLeftClose, PanelLeft } from 'lucide-react';
 import { CALCULATOR_CATEGORIES } from '../../utils/calculatorData';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -59,6 +59,10 @@ export default function Sidebar({ isOpen, onToggle }) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-sp-5 px-sp-5 space-y-sp-1">
           <NavLink to="/" end className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+            <Home size={16} strokeWidth={1.75} />
+            <span>Home</span>
+          </NavLink>
+          <NavLink to="/dashboard" end className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
             <LayoutDashboard size={16} strokeWidth={1.75} />
             <span>Dashboard</span>
           </NavLink>

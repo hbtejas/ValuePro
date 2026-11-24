@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './features/store';
 import Layout from './components/common/Layout';
+import Landing from './pages/Landing';
 import Dashboard from './pages/Dashboard';
 import CalculatorPage from './pages/CalculatorPage';
 import CalculatorList from './pages/CalculatorList';
@@ -15,8 +16,9 @@ export default function App() {
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route element={<Layout />}>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/calculators" element={<CalculatorList />} />
             <Route path="/calculator/:calculatorId" element={<CalculatorPage />} />
             <Route path="/screener" element={<StockScreener />} />

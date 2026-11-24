@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, Sun, Moon, Menu, LogOut, ArrowRight } from 'lucide-react';
 import { toggleTheme } from '../../features/themeSlice';
 import { logout } from '../../features/authSlice';
@@ -56,6 +56,14 @@ export default function Navbar({ onMenuToggle }) {
     <header className="sticky top-0 z-20 bg-canvas/95 backdrop-blur border-b border-surface-border">
       <div className="flex items-center justify-between px-sp-6 lg:px-sp-8 h-16 gap-sp-6">
         <div className="flex items-center gap-sp-5 flex-1 min-w-0">
+          <Link
+            to="/"
+            className="w-8 h-8 rounded-sm bg-accent flex items-center justify-center shrink-0"
+            aria-label="ValuePro home"
+          >
+            <span className="text-onaccent font-mono font-semibold text-base leading-none">V</span>
+          </Link>
+
           <button onClick={onMenuToggle} className="btn-ghost !px-2 lg:hidden" aria-label="Open navigation">
             <Menu size={18} />
           </button>

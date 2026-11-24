@@ -8,7 +8,7 @@ export default function CalculatorPage() {
   const info = getCalculatorInfo(calculatorId);
 
   if (!Component || !info) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/calculators" replace />;
   }
 
   return <Component />;
